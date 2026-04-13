@@ -15,7 +15,7 @@ public class Request implements Serializable{
 	private int recipientID; // id to send to
 
 	// ENUMERATION FOR REQUEST TYPE
-	protected enum REQUESTTYPE {SENDMESSAGE, REGISTRATION, SEARCH, VIEWCONTACTS, LOADCHATHISTORY, READLOG, CREATEGROUP, LOGIN, LOGOUT, ADDCONTACT, REMOVECONTACT, NULL, SUCCESS};
+	protected enum REQUESTTYPE {SENDMESSAGE, REGISTRATION, SEARCH, VIEWCONTACTS, LOADCHATHISTORY, READLOG, CREATEGROUP, LOGIN, LOGOUT, ADDCONTACT, REMOVECONTACT, SUCCESS, NULL};
 	
 	// constructor
 	public Request(String d, String sType, String rType, int t, int sID, int rID) {
@@ -116,6 +116,10 @@ public class Request implements Serializable{
 		
 		case(10):
 			type = REQUESTTYPE.REMOVECONTACT;
+		break;
+		
+		case(11):
+			type = REQUESTTYPE.SUCCESS;
 		break;
 			
 		default:
