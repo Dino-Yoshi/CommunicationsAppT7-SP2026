@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class ClientNetwork {
 	// attributes
@@ -26,23 +27,23 @@ public class ClientNetwork {
 				
 		    // Create object output stream from the output stream to send an object through it. Needs an OutputStream
 		    ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+		    
+		    // Create a new Request of LOGIN. Send this to the Server.
+		    
+		    // TODO: Get this to take a username and password as input.
+		    // String d, String sType, String rType, int t, int sID, int rID
+	        Request loginReq = new Request("Logging in.", "USER", "NULL", 7, 0, -1);
+	        objectOutputStream.writeObject(loginReq);
+	        objectOutputStream.flush();
 		        
 		    // create a ObjectInputStream so we can read data from it. Needs an InputStream
 		    ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-		
-		    // Create a new Request of LOGIN. Send this to the Server.
-		    
-		    // String d, String sType, String rType, int t, int sID, int rID
-	        Request loginReq = new Request("Logging in.", "USER", "NULL", 0, 0, -1);
-	        objectOutputStream.writeObject(loginReq);
-	        objectOutputStream.flush();
-	        
 	        // Retrieve an expected Request of SUCCESS. 
 	        Request tmp = (Request) objectInputStream.readObject();
 		    
 		    // Interpret the SUCCESS Request, and enter the interactive loop. 
 		    if(tmp.getType() == Request.REQUESTTYPE.SUCCESS) {
-		       int msgChoice = 1; // TODO: Replace this
+		       int msgChoice = 1; // TODO: Replace this using Graphical Choices
 		       do {
 		    	   try {
 		    		   // TODO: Make a Graphical Window with options that require sending and receiving requests to the server.
@@ -76,14 +77,15 @@ public class ClientNetwork {
 		       		// This will lead to the loop breaking and the client closing.
 		       		case(1):
 		        		
-//		       			Request newLogOutMsg = new Request(1, 0, "luser logging out");
-//		        		
-//		        		objectOutputStream.writeObject(newLogOutMsg);
-//				        objectOutputStream.flush();
+		       			Request newLogOutMsg = new Request("Logging out.", "USER", "NULL", 8, 0, -1);
+		        		
+		        		objectOutputStream.writeObject(newLogOutMsg);
+				        objectOutputStream.flush();
 //					        
-//				        Request inboundLogOutMsg = (Request) objectInputStream.readObject();
+				        Request inboundLogOutMsg = (Request) objectInputStream.readObject();
 //					        
-//					    System.out.println("Server responded: " + inboundLogOutMsg.getText());
+					    System.out.println("Server responded: " + inboundLogOutMsg.getData());
+					    System.out.println("You are now going to be logged out for the sake of testing.");
 					        
 					break;
 		        		
@@ -95,7 +97,7 @@ public class ClientNetwork {
 		        		
 		        }while(msgChoice != 1);
 		        	
-		       clientSocket.close(); // TODO: Potential Socket Exception
+		       
 		    }
 		        
 		        
@@ -104,6 +106,13 @@ public class ClientNetwork {
 		}catch(ClassNotFoundException e) {
 	    	e.printStackTrace();
 	    }
+		
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		} 
 		
 	}
 	

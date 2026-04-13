@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ServerNetwork {
 	// attributes
-	private static int port = 6767; // port number
+	private static int port = 7777; // port number
 	private ServerSocket ss; // serversocket that listens on the defined port.
 	private static SERVERSTATUS status; // status of server.
 	private ArrayList<Socket> clients; // array list of sockets which are all currently connected clients.
@@ -54,14 +54,25 @@ public class ServerNetwork {
 	
 	// ClientHandler class
 	private static class ClientHandler implements Runnable  {
+		
+		// attribs
 		private final Socket clientSocket;
-
+		private String username;
+		private boolean authenticated;
+		//private final RequestHandler requestHandler;
+		
+		
 		// Constructor
 		public ClientHandler(Socket socket)
 		{
 			this.clientSocket = socket;
+			this.username = null;
+			this.authenticated = false;
+			//this.requestHandler = null;
+			
 		}
 
+		// methods
 		public void run(){
 			try {
 						
@@ -102,7 +113,7 @@ public class ServerNetwork {
 		        
 		        // TODO: obviously login is not this simple, at minimum password and username must be processed from the incoming
 		        // message.
-		        Request OutboundMsg = new Request("You have logged in.", "SERVER", "USER", 0, -1, 0);
+		        Request OutboundMsg = new Request("You have logged in.", "SERVER", "USER", 11, -1, 0);
 		        objectOutputStream.writeObject(OutboundMsg);
 		        objectOutputStream.flush();
 			        
@@ -112,6 +123,7 @@ public class ServerNetwork {
 		        		InboundMsg = (Request) objectInputStream.readObject();
 			        		
 		        		// TODO: Interpret all incoming messages using the RequestHandler
+		        		
 		        		
 		        		
 		        		if(InboundMsg.getType() == Request.REQUESTTYPE.SENDMESSAGE) {
@@ -125,15 +137,16 @@ public class ServerNetwork {
 		        		// On logout, returns a new message with status "SUCCESS".
 		        		}else if(InboundMsg.getType() == Request.REQUESTTYPE.LOGOUT) {
 			        		
-		        			/*
-		        			OutboundMsg = new Request(1, 0, "You have been logged out.");
+		        			
+		        			OutboundMsg = new Request("You have been logged out.", "SERVER", "USER", 11, -1, 0);
 		        			objectOutputStream.writeObject(OutboundMsg);
 		        			objectOutputStream.flush();
-		        			*/
+		        			
 			        			
-		        		//}else {
+		        		}else {
 		        			System.out.println("Ignoring Message of type LOGIN");
 		        		}
+		        		
 		        	}catch(ClassNotFoundException e) {
 		        		e.printStackTrace();
 		        	}
@@ -148,13 +161,46 @@ public class ServerNetwork {
 				e.printStackTrace();
 			}
 		}
+		
+		public Request parseRequest(String raw) {
+			// TODO: What does this do? 
+			return null;
+		}
+		
+		public void handleRequest(Request req) {
+			// TODO: Wrapper function for the RequestHandler's methods.
+		}
+		
+		public void sendResponse(String msg) {
+			// TODO: Wrapper function for sending a Request through the network
+		}
+
+		// getters
+		public boolean isAuthenticated() {
+			return authenticated;
+		}
+		
+		public String getUsername() {
+			return username;
+		}
+
+		
+		// setters
+		public void setAuthenticated(boolean authenticated) {
+			this.authenticated = authenticated;
+		}
+		public void setUsername(String n) {
+			
+		}
+		
 	}
 
 	
 	
 	
 	
-	// methods
+	// ServerNetwork methods
+	
 	public static int getPort() {
 		return port;
 	}
@@ -186,6 +232,10 @@ public class ServerNetwork {
 		break;
 		}
 	}
+	
+	// ClientHandler Methods
+	
+	
 	
 	
 	
