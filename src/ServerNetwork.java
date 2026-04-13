@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class ServerNetwork {
+	
 	// attributes
 	private static int port = 7777; // port number
 	private ServerSocket ss; // serversocket that listens on the defined port.
@@ -162,10 +163,7 @@ public class ServerNetwork {
 			}
 		}
 		
-		public Request parseRequest(String raw) {
-			// TODO: What does this do? 
-			return null;
-		}
+		// ClientHandler Methods
 		
 		public void handleRequest(Request req) {
 			// TODO: Wrapper function for the RequestHandler's methods.
@@ -233,7 +231,7 @@ public class ServerNetwork {
 		}
 	}
 	
-	// ClientHandler Methods
+	
 	
 	
 	
