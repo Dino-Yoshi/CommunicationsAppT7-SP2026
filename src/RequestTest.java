@@ -6,6 +6,8 @@ public class RequestTest {
 		
 		Request[] requests = new Request[10];
 		
+		ClientNetwork c;
+		
 		for(int i = 0; i < 10; i++) {
 			
 			// String d, String sType, String rType, int t, int sID, int rID
