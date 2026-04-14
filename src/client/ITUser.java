@@ -9,6 +9,7 @@ public class ITUser extends User {
 	// constructor
 	public ITUser(String u, String p) {
 		super(u, p);
+		ITUID = ++count;
 		IT = true;
 	}
 	
