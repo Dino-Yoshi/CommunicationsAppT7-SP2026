@@ -1,5 +1,7 @@
-
 // basic test drive for the Request Class and its methods + getters.
+package networking;
+
+
 public class RequestTest {
 
 	public static void main(String[] args) {

@@ -1,6 +1,7 @@
-
-
 // TODO: ServerNetwork and ClientNetwork must be built together.
+package networking;
+
+
 
 import java.io.IOException;
 import java.io.InputStream;

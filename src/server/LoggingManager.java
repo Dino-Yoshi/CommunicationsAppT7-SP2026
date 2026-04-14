@@ -1,4 +1,4 @@
-package communicationsapp;
+package server;
 
 public class LoggingManager {
 
