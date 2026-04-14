@@ -18,8 +18,8 @@ public class ServerNetwork {
 	private static int port = 7777; // port number
 	private ServerSocket ss; // serversocket that listens on the defined port.
 	private static SERVERSTATUS status; // status of server.
-	private ArrayList<Socket> clients; // array list of sockets which are all currently connected clients.
-	private int numConnections; // number of currently active connections.
+	private static ArrayList<Socket> clients; // array list of sockets which are all currently connected clients.
+	private static int numConnections; // number of currently active connections.
 	
 	protected enum SERVERSTATUS {ONLINE, OFFLINE, ERROR, NULL}; // enumeration of server status
 	
@@ -36,6 +36,9 @@ public class ServerNetwork {
 			// socket object to receive incoming client
 			// requests
 			Socket client = ss.accept();
+			
+			clients.add(client);
+			++numConnections;
 
 			// Displaying that new client is connected
 			// to server
@@ -157,6 +160,8 @@ public class ServerNetwork {
 			        
 		        // once the loop breaks, close the thread. 
 		        clientSocket.close();
+		        --numConnections;
+		        clients.remove(clientSocket);
 					
 			}
 			catch (IOException e) {
