@@ -53,6 +53,16 @@ public class GUI {
 		return currentUser;
 	}
 	
+	//getter to get the connected instance of clientNetwork tied to GUI
+	//used for when we integrate stuff
+	/*
+	 * 
+	 * public ClientNetwork getNetworkClient() {
+		return networkClient;
+	
+	}
+	*/
+	
 	//method to automatically call for the LoginView Class
 	public void startApplication() {
 		switchView(VIEWSTATE.LOGIN);
