@@ -77,7 +77,7 @@ public class LoginView extends JPanel{
 		//this is just some hardCoded logic just to test out all buttons and field work
 		if(username.equals("bob") && password.equals("pass123")) {
 			System.out.println("Successful login by: "+ username);
-			
+			mainGUI.switchView(VIEWSTATE.MENU);
 			clearFields();
 		}
 		else {

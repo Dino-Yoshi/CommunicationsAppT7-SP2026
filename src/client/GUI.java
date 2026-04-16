@@ -12,6 +12,7 @@ public class GUI {
 	
 	//private instances of our panels
 	private LoginView loginView;
+	private ChatOverlayView chatOverlayView;
 	//TODO: set up the other classes from part of section 1
 	
 	//private GUI variables
@@ -37,9 +38,10 @@ public class GUI {
 		cardPanel = new JPanel(cardLayout);
 		
 		loginView = new LoginView(this);
+		chatOverlayView = new ChatOverlayView(this);
 		
 		cardPanel.add(loginView, VIEWSTATE.LOGIN.name());
-		
+		cardPanel.add(chatOverlayView, VIEWSTATE.MENU.name());
 		mainFrame.add(cardPanel);
 	}
 	
@@ -67,11 +69,17 @@ public class GUI {
 	public void startApplication() {
 		switchView(VIEWSTATE.LOGIN);
 		mainFrame.setVisible(true);
+		
+		
 	}
 	
 	public void switchView(VIEWSTATE state) {
 		currentState = state;
 		cardLayout.show(cardPanel, state.name());
+		
+		if(state == VIEWSTATE.MENU) {
+			chatOverlayView.loadContacts();
+		}
 	}
 	
 	//OUR MAIN METHOD 
