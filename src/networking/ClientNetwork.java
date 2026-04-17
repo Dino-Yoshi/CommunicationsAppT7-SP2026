@@ -140,7 +140,7 @@ public class ClientNetwork {
 					return -5;
 				}
 			}else {
-				
+				System.err.println("Ignoring Login Request. (500)");
 			}
 			
 			
