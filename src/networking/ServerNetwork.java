@@ -71,6 +71,8 @@ public class ServerNetwork {
 		private String username;
 		private boolean authenticated;
 		private final RequestHandler requestHandler;
+		private ObjectOutputStream objectOutputStream;
+		private ObjectInputStream objectInputStream;
 		
 		
 		// Constructor
@@ -85,7 +87,7 @@ public class ServerNetwork {
 			//requestHandler.getAuth().loadUsers((requestHandler.getStorageManager().loadUsers()));
 		}
 
-		// methods
+		// ClientHandler methods
 		public void run(){
 			try {
 						
@@ -93,7 +95,7 @@ public class ServerNetwork {
 		        OutputStream outputStream = clientSocket.getOutputStream();
 
 			    // Create object output stream from the output stream to send an object through it
-		        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+		        objectOutputStream = new ObjectOutputStream(outputStream);
 			        
 		        objectOutputStream.flush();
 			        
@@ -101,7 +103,7 @@ public class ServerNetwork {
 		        InputStream inputStream = clientSocket.getInputStream();
 
 		        // create a ObjectInputStream so we can read data from it. something here is freezing up... when client also has ObjectInputStream
-		        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+		        objectInputStream = new ObjectInputStream(inputStream);
 			        
 		        Request InboundMsg = null;
 		        Request OutboundMsg = null;
@@ -127,49 +129,26 @@ public class ServerNetwork {
 			        }while(InboundMsg == null);
 		        	
 		        	// process the user's login request
-		        	OutboundMsg = requestHandler.handleRequest(InboundMsg, clientSocket);
+		        	OutboundMsg = handleRequest(InboundMsg);
 		        	
 		        	objectOutputStream.writeObject(OutboundMsg);
 				    objectOutputStream.flush();
 		        	
 		        }while(OutboundMsg.getType() == Request.REQUESTTYPE.NULL);
+		        
+		        setAuthenticated(true);
 			        
-		        // now continuously read for text messages or a logout message from clients.
+		        // now read for requests sent by the client.
 		        do {
 		        	try {
+		        		
+		        		// interpret the request read, and send it back to the client. 
 		        		InboundMsg = (Request) objectInputStream.readObject();
 		        		
-		        		OutboundMsg = requestHandler.handleRequest(InboundMsg, clientSocket);
+		        		OutboundMsg = handleRequest(InboundMsg);
 		        		
-		        		objectOutputStream.writeObject(OutboundMsg);
-	        			objectOutputStream.flush();
-			        		
-		        		// TODO: Interpret all incoming messages using the RequestHandler
-		        		
-		        		
-		        		/*
-		        		if(InboundMsg.getType() == Request.REQUESTTYPE.SENDMESSAGE) {
-			        		
-		        			
-		        			OutboundMsg = new Request(2, 0, InboundMsg.getText().toUpperCase());
-		        			objectOutputStream.writeObject(OutboundMsg);
-		        			objectOutputStream.flush();
-		        			
-			        			
-		        		// On logout, returns a new message with status "SUCCESS".
-		        		}else if(InboundMsg.getType() == Request.REQUESTTYPE.LOGOUT) {
-			        		
-		        			
-		        			OutboundMsg = new Request("You have been logged out.", "SERVER", "USER", 11, -1, 0);
-		        			objectOutputStream.writeObject(OutboundMsg);
-		        			objectOutputStream.flush();
-		        			
-			        			
-		        		}else {
-		        			System.out.println("Ignoring Message of type LOGIN");
-		        		}
-		        		*/
-		        		
+		        		sendResponse(OutboundMsg);
+
 		        	}catch(ClassNotFoundException e) {
 		        		e.printStackTrace();
 		        	}
@@ -189,30 +168,18 @@ public class ServerNetwork {
 		
 		// ClientHandler Methods
 		
-		public void handleRequest(Request req) {
-			// TODO: Wrapper function for the RequestHandler's methods.
+		public Request handleRequest(Request req) {
+			return requestHandler.handleRequest(req, clientSocket);
 		}
 		
-		public void sendResponse(String msg) {
-			// TODO: Wrapper function for sending a Request through the network
+		public void sendResponse(Request msg) throws IOException{
+			objectOutputStream.writeObject(msg);
+			objectOutputStream.flush();
 		}
-
-		// getters
-		public boolean isAuthenticated() {
-			return authenticated;
-		}
-		
-		public String getUsername() {
-			return username;
-		}
-
 		
 		// setters
 		public void setAuthenticated(boolean authenticated) {
 			this.authenticated = authenticated;
-		}
-		public void setUsername(String n) {
-			
 		}
 		
 	}
