@@ -21,7 +21,7 @@ public class ChatOverlayView extends JPanel{
 		
 		//set up layout for our contacts list
 		JPanel contactsPanel = new JPanel(new BorderLayout());
-		contactsPanel.setBorder(BorderFactory.createTitledBorder("Contacts"));
+		contactsPanel.setBorder(BorderFactory.createTitledBorder("Conversations"));
 		contactsModel = new DefaultListModel<>();
 		contactsList = new JList<>(contactsModel);
 		contactsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -70,6 +70,8 @@ public class ChatOverlayView extends JPanel{
 			}
 		});
 		logoutButton.addActionListener(e-> clickLogout());
+		
+		createGroupButton.addActionListener(e -> mainGUI.switchView(VIEWSTATE.GROUPCREATION));
 	}
 	
 
@@ -82,6 +84,8 @@ public class ChatOverlayView extends JPanel{
 		contactsModel.addElement("Darien");
 		contactsModel.addElement("Clarize");
 		contactsModel.addElement("Victor");
+		
+		contactsModel.addElement("Group 7");
 	}
 	
 	public void openConversation(String targetChat) {
@@ -104,6 +108,11 @@ public class ChatOverlayView extends JPanel{
 		
 		messageInputUI.setText("");//reset text input area
 		
+	}
+	
+	//adds a newly created group to the UI list
+	public void addNewGroup(String groupName) {
+		contactsModel.addElement("[Group] " + groupName);
 	}
 	
 	public void clickLogout() {
