@@ -1,6 +1,7 @@
 package server;
 
 import java.io.BufferedReader;
+import networking.Request;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -12,8 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import server.tests.Request;
 
 // CLASS DESCRIPTION:
 // handles user persistence, chat history persistence, and offline message storage

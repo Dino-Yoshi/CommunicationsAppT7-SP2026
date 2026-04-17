@@ -1,9 +1,9 @@
 package server;
 
+
 import java.util.ArrayList;
 import java.util.List;
-
-import server.tests.Request;
+import networking.Request;
 
 // CLASS DESCRIPTION:
 // receives requests and coordinates authentication, storage, logging, contacts, groups, and connections
@@ -33,6 +33,7 @@ public class RequestHandler {
         this.auth.loadUsers(this.storageManager.loadUsers()); 				// loads saved users into the authentication manager
     }
 
+    
     // METHODS
 
     // handles a request
