@@ -22,6 +22,8 @@ public class ChatOverlayView extends JPanel{
 		this.mainGUI = mainGUI;
 		setLayout(new BorderLayout());
 		
+
+		
 		//set up layout for our contacts list
 		JPanel contactsPanel = new JPanel(new BorderLayout());
 		contactsPanel.setBorder(BorderFactory.createTitledBorder("Conversations"));
@@ -68,6 +70,8 @@ public class ChatOverlayView extends JPanel{
 		messageInputUI.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		contactsList.addListSelectionListener(e->{
 			
+			Request req = new Request("Fetching Contacts", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
+			mainGUI.getNetworkClient().sendRequest(req);
 			if(!e.getValueIsAdjusting() && contactsList.getSelectedValue() !=null) {
 				openConversation(contactsList.getSelectedValue());
 			}
@@ -92,6 +96,9 @@ public class ChatOverlayView extends JPanel{
 	}
 	
 	public void openConversation(String targetChat) {
+		
+		Request req = new Request("Fetching Chatlog", "USER", "SERVER", 4, mainGUI.getCurrentUser().getUID(), -1);
+		mainGUI.getNetworkClient().sendRequest(req);
 		this.currentTargetID = targetChat;
 		chatHistory.setText("Conversation with: " + currentTargetID+ "\n");
 	}
@@ -111,11 +118,19 @@ public class ChatOverlayView extends JPanel{
 		
 		messageInputUI.setText("");//reset text input area
 		
+		// Darien Test (Sending Message)
+		Request req = new Request(content, "USER", "SERVER", 0, mainGUI.getCurrentUser().getUID(), -1);
+		mainGUI.getNetworkClient().sendRequest(req);
+		//
+		
+
+		
 	}
 	
 	//adds a newly created group to the UI list
 	public void addNewGroup(String groupName) {
 		contactsModel.addElement("[Group] " + groupName);
+		
 	}
 	
 	public void clickLogout() {
