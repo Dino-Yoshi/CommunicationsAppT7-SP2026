@@ -13,6 +13,8 @@ public class GUI {
 	//private instances of our panels
 	private LoginView loginView;
 	private ChatOverlayView chatOverlayView;
+	private ITControlPanelView itPanelView;
+	private GroupCreationView groupCreationView;
 	//TODO: set up the other classes from part of section 1
 	
 	//private GUI variables
@@ -39,6 +41,12 @@ public class GUI {
 		
 		loginView = new LoginView(this);
 		chatOverlayView = new ChatOverlayView(this);
+		
+		itPanelView = new ITControlPanelView(this);
+		cardPanel.add(itPanelView, VIEWSTATE.ITPANEL.name());
+		
+		groupCreationView = new GroupCreationView(this);
+		cardPanel.add(groupCreationView, VIEWSTATE.GROUPCREATION.name());
 		
 		cardPanel.add(loginView, VIEWSTATE.LOGIN.name());
 		cardPanel.add(chatOverlayView, VIEWSTATE.MENU.name());
@@ -100,5 +108,9 @@ public class GUI {
 	
 	public LoginView getLoginView() {
 		return loginView;
+	}
+	
+	public ChatOverlayView getChatOverlayView() {
+		return chatOverlayView;
 	}
 }
