@@ -80,6 +80,11 @@ public class LoginView extends JPanel{
 			mainGUI.switchView(VIEWSTATE.MENU);
 			clearFields();
 		}
+		else if(username.equals("admin") && password.equals("admin123")) {
+			System.out.println("IT admin was successful");
+			mainGUI.switchView(VIEWSTATE.ITPANEL);
+			clearFields();
+		}
 		else {
 			System.out.println("Failed LOGIN ATTEMPT");
 			
