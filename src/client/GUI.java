@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.CardLayout;
+import networking.ClientNetwork;
 import javax.swing.*;
 
 public class GUI {
@@ -8,7 +9,7 @@ public class GUI {
 	private VIEWSTATE currentState;
 	private User currentUser;
 	
-	//private ClientNetwork networkClient; use when we integrate
+	private ClientNetwork networkClient; 
 	
 	//private instances of our panels
 	private LoginView loginView;
@@ -28,7 +29,7 @@ public class GUI {
 		this.currentState = VIEWSTATE.LOGIN;
 		
 		//used to initialize the ClientNetwork class to create a thread for the user
-		//this.networkClient = new ClientNetwork("localHost", 7777); will be used when integrated
+		this.networkClient = new ClientNetwork("localhost", 7777); 
 		
 		mainFrame = new JFrame("Group 7 Communication App");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //ensure pressing X icon closes app
@@ -65,13 +66,12 @@ public class GUI {
 	
 	//getter to get the connected instance of clientNetwork tied to GUI
 	//used for when we integrate stuff
-	/*
-	 * 
-	 * public ClientNetwork getNetworkClient() {
+
+	public ClientNetwork getNetworkClient() {
 		return networkClient;
 	
 	}
-	*/
+	
 	
 	//method to automatically call for the LoginView Class
 	public void startApplication() {

@@ -1,4 +1,6 @@
 package networking;
+import client.*;
+import server.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,11 +14,11 @@ public class ClientNetwork {
 	private CLIENTSTATUS status; // Client Current Status
 	private enum CLIENTSTATUS {CONNECTED, DISCONNECTED, NULL}; // Status ENUM
 	
-	// private RequestHandler requestHandler; TODO: pull from Clarize's Branch for RequestHandler
-	// private USER user; 
+	private RequestHandler requestHandler; 
+	private User user; 
 	
 	// constructor
-	ClientNetwork(String ip, int port){
+	public ClientNetwork(String ip, int port){
 		serverIP = ip;
 		serverPort = port;
 		
@@ -39,7 +41,17 @@ public class ClientNetwork {
 		    // create a ObjectInputStream so we can read data from it. Needs an InputStream
 		    ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
 	        // Retrieve an expected Request of SUCCESS. 
-	        Request tmp = (Request) objectInputStream.readObject();
+		    
+		    Request tmp;
+		    
+		    do {
+		    	tmp = (Request) objectInputStream.readObject();
+		    	if(tmp.getType() != Request.REQUESTTYPE.SUCCESS) {
+		    		System.err.println("Ignoring non-success request type.");
+		    		tmp = null;
+		    	}
+		    }while(tmp.getType() != Request.REQUESTTYPE.SUCCESS);
+	         
 		    
 		    // Interpret the SUCCESS Request, and enter the interactive loop. 
 		    if(tmp.getType() == Request.REQUESTTYPE.SUCCESS) {
