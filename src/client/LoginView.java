@@ -98,6 +98,8 @@ public class LoginView extends JPanel{
 		 */
 		
 		
+		/// dummy example request creation test for logging in as a regular user and GUI panes.
+		
 		 // format the username and password.
 		 String creds = username + "," + password;
 		 

@@ -1,6 +1,9 @@
 package client;
 
 import javax.swing.*;
+
+import networking.Request;
+
 import java.awt.*;
 
 public class ITControlPanelView extends JPanel{
@@ -100,6 +103,8 @@ public class ITControlPanelView extends JPanel{
         backButton.addActionListener(e -> mainGUI.switchView(VIEWSTATE.MENU));
         
         logoutButton.addActionListener(e -> {
+    		Request req = new Request(mainGUI.getCurrentUser().getUsername(), "USER", "SERVER", 8, mainGUI.getCurrentUser().getUID(), -1);
+    		mainGUI.getNetworkClient().sendRequest(req);
             mainGUI.switchView(VIEWSTATE.LOGIN);
         });
         
@@ -108,11 +113,18 @@ public class ITControlPanelView extends JPanel{
         //area to see authentication logs, such as
         //any type of logins, new added user, etc...
         fetchAuthenticationButton.addActionListener(e ->{
+    		Request req = new Request("", "USER", "SERVER", 5, mainGUI.getCurrentUser().getUID(), -1);
+    		mainGUI.getNetworkClient().sendRequest(req);
         	logUI.setText("Authentication Logs \n");
+        	
         });
         
         //shows a list of existing users
         searchBtn.addActionListener(e -> {
+        	
+    		Request req = new Request("", "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
+    		mainGUI.getNetworkClient().sendRequest(req);
+        	
             searchResultsModel.clear();
             userChatsModel.clear();
             searchResultsModel.addElement("Victor");
@@ -131,6 +143,10 @@ public class ITControlPanelView extends JPanel{
         
         //
         userChatsList.addListSelectionListener(e -> {
+        	
+    		Request req = new Request("", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
+    		mainGUI.getNetworkClient().sendRequest(req);
+        	
             if (!e.getValueIsAdjusting() && userChatsList.getSelectedValue() != null) {
                 String selectedUser = searchResultsList.getSelectedValue();
                 String targetContact = userChatsList.getSelectedValue();
@@ -152,6 +168,10 @@ public class ITControlPanelView extends JPanel{
 		JOptionPane.showMessageDialog(this, "User '" + newUserName + "' registered successfully.");
         newUserUI.setText(""); 
         newPassUI.setText("");
+        
+        String msg = newUserName + "," + newPassword;
+		Request req = new Request(msg, "USER", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
+		mainGUI.getNetworkClient().sendRequest(req);
         
 		/* layout of how it will generally go
 		 * String regData = newUsername + "," + newPassword; Request regReq = new

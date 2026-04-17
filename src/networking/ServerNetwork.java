@@ -1,8 +1,6 @@
 // TODO: ServerNetwork and ClientNetwork must be built together.
 package networking;
 
-
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -172,8 +170,8 @@ public class ServerNetwork {
 			return requestHandler.handleRequest(req, clientSocket);
 		}
 		
-		public void sendResponse(Request msg) throws IOException{
-			objectOutputStream.writeObject(msg);
+		public void sendResponse(Request req) throws IOException{
+			objectOutputStream.writeObject(req);
 			objectOutputStream.flush();
 		}
 		
@@ -183,10 +181,6 @@ public class ServerNetwork {
 		}
 		
 	}
-
-	
-	
-	
 	
 	// ServerNetwork methods
 	
