@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.JPanel;
+import networking.Request;
 
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -75,6 +76,7 @@ public class LoginView extends JPanel{
 		
 		//logic for validation
 		//this is just some hardCoded logic just to test out all buttons and field work
+		/*
 		if(username.equals("bob") && password.equals("pass123")) {
 			System.out.println("Successful login by: "+ username);
 			mainGUI.switchView(VIEWSTATE.MENU);
@@ -92,16 +94,46 @@ public class LoginView extends JPanel{
 		}
 		
 		//this bottom code is what will be primarily used when fully integrated
+		/// 
+		 */
 		
-		/*
-		 * String creds = usernameField + "," + passwordField;
-		 * Request loginReq = new Request(credentials, "USER", "NULL",7,0,-1);
-		 * 
-		 * mainGUI.getNetworkClient().sendRequest(loginReq);
-		 * 
-		 * clearFields();
-		 * 
-		 * */
+		
+		 // format the username and password.
+		 String creds = username + "," + password;
+		 
+		 // create a login request
+		 Request loginReq = new Request(creds, "USER", "SERVER", 7, -1, -1);
+		  
+		 // determine the behavior
+		 
+		 User user = new User(username, password);
+		 
+		 int success = mainGUI.getNetworkClient().connectToServer(loginReq, user);
+		 
+		 // either login or fail
+		 if(success == 0) {
+			 System.out.println("Successful login by: "+ username);
+			 
+			 // new user to set id
+			 
+			 mainGUI.setCurrentUser(user);
+			 mainGUI.switchView(VIEWSTATE.MENU);
+			 clearFields();
+			 
+		 }else if(success == -3) {
+			 //System.out.println("Failed LOGIN ATTEMPT");
+				
+			 JOptionPane.showMessageDialog(this, "Invalid Credentials", "Login Error", JOptionPane.ERROR_MESSAGE);
+		 }else {
+			 JOptionPane.showMessageDialog(this, "An unknown exception has occurred. Please contact your admin.", "Unknown Error", JOptionPane.ERROR_MESSAGE);
+		 }
+		 
+		 // clear the fields
+		 clearFields();
+		
+		 
+		
+		
 	}
 	
 	//clears all fields

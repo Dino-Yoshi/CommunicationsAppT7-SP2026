@@ -7,7 +7,7 @@ public class ClientServerTest {
 		// Idea is that the GUI has a ClientNetwork Attribute that when fired auto connects to the server.
 		ClientNetwork c;
 		
-		c = new ClientNetwork("localhost", 7777);
+		//c = new ClientNetwork("localhost", 7777);
 		
 		
 		

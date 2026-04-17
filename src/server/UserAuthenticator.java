@@ -98,6 +98,9 @@ public class UserAuthenticator {
         return cleanUsername == null ? null : usernameToId.get(cleanUsername);	// returns id or null if unknown
     }
 
+    
+    // TODO: how will the client know what id they are on logout? Because the logout checks by id to username. This is a problem if the user ids don't match exactly, as it
+    // prevents logout. 
     // loads persisted username and password data
     public synchronized void loadUsers(Map<String, String> users) {
         userCredentials.clear();	// clears any existing credential data

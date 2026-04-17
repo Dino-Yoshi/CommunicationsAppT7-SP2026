@@ -129,7 +129,11 @@ public class RequestHandler {
             List<Request> offlineMessages = storageManager.getOfflineMessages(userId); // gets queued offline messages for this user
             loggingManager.addStructuredLog(LogType.LOGIN_SUCCESS, username, "SERVER", "login successful");	// logs successful login
             loggingManager.saveLogs();	// saves the log
-            return createResponse("SUCCESS: logged in as " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), Request.REQUESTTYPE.SUCCESS, -1, userId);	// returns success response
+            
+            // String d, String sType, String rType, int t, int sID, int rID
+            Request outbound = new Request("SUCCESS: logged in as " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), "SERVER", "USER", 11, -1, userId);
+            return outbound;
+            //return createResponse("SUCCESS: logged in as " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), Request.REQUESTTYPE.SUCCESS, -1, userId);	// returns success response
         }	// end authentication success check
         
         loggingManager.addStructuredLog(LogType.LOGIN_FAILED, username, "SERVER", "login failed");	// logs failed login
@@ -140,6 +144,7 @@ public class RequestHandler {
     // logs out a user
     public synchronized Request doLogOut(Request request) {
         String username = auth.getUsernameById(request.getSenderID());	// resolves the sender id to a username
+    	
         
         if (username == null) {	// checks if the sender id is unknown
             return createResponse("ERROR: unknown user cannot log out", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns unknown user response
