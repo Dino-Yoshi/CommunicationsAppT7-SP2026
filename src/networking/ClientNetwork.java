@@ -108,30 +108,152 @@ public class ClientNetwork {
 	public int sendRequest(Request req) {
 		if(status == CLIENTSTATUS.CONNECTED) {
 			
+			Request inbound;
+			
 			if(req.getType() != REQUESTTYPE.LOGIN) {
 				try {
 					
 					switch(req.getType()) {
 					
-					case REQUESTTYPE.LOGOUT:
+					case LOGOUT:
 						
-						objectOutputStream.writeObject(req);
-						objectOutputStream.flush();
+						sendResponse(req);
 						
-						Request inbound = (Request) objectInputStream.readObject();
+						inbound = (Request) objectInputStream.readObject();
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS) {
 							disconnect();
 							setStatus(1);
+							System.out.println("Data: " + inbound.getData());
 							return 0; // log the user out.
 						}else {
 							return -1; // some sort of error occurred, can't log them out!
 						}
-					   
-					
+
+					case SENDMESSAGE:
+						
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0;
+						}else {
+							return -1; // send message failed: either the recipient doesn't exist (more likely), or the sender is not logged in.
+						}
+						
+					case REGISTRATION:							// handles registration requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // registration failed: either user attempts to register, or registration failed (more likely)
+						}
+		            	
+		            case SEARCH: 							// handles user search requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // search failed: user is not logged in. (unlikely) a better error message is when users aren't found.
+						}
+		                
+		            case VIEWCONTACTS: 						// handles view contacts requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // search failed: user is unknown/not found
+						}
+		            	
+		            case ADDCONTACT: 						// handles add contact requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // addcontact failed: user being added is not known, dosen't exist, or the action fails. most likely: user doesn't exist.
+						}
+		                
+		            case REMOVECONTACT: 					// handles remove contact requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // remove contact failed: user is unknown/not found, or the action fails. more likely: user not found.
+						}
+		                
+		            case LOADCHATHISTORY: 					// handles chat history requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // doChatLog/LoadChatLog failed: user is unknown/not found
+						}
+		                
+		            case READLOG: 							// handles read log requests
+		                
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // doReadLog failed: if user is not an ITUser
+						}
+		                
+		            case CREATEGROUP:						// handles create group requests
+		            	
+						sendResponse(req);
+						
+						inbound = (Request) objectInputStream.readObject();
+						
+						if(inbound.getType() == REQUESTTYPE.SUCCESS){
+							System.out.println("Data: " + inbound.getData());
+							return 0; 
+						}else {
+							return -1; // doCreateGroup failed: user not logged in; member doesn't exist (more likely); or group fails. 
+						}
+		                
+		                
+		            default: // handles unsupported request types
+		                
+		        
+						
 					}
-					
-					
+
 				}catch(IOException e) {
 					e.printStackTrace();
 					return -4;
@@ -142,83 +264,21 @@ public class ClientNetwork {
 			}else {
 				System.err.println("Ignoring Login Request. (500)");
 			}
-			
-			
-			
-			
+	
 			return 0;
 		}else {
 			return -1; // No connection to the server. 
 		}
 	}
-			    
-		         
-			    
-			    // Interpret the SUCCESS Request, and enter the interactive loop. 
-			    
-			    /*
-			    if(tmp.getType() == Request.REQUESTTYPE.SUCCESS) {
-			       int msgChoice = 1; // TODO: Replace this using Graphical Choices
-			       do {
-			    	   try {
-			    		   // TODO: Make a Graphical Window with options that require sending and receiving requests to the server.
-			        	}catch(NumberFormatException e) {
-			        		e.printStackTrace();
-			        		System.out.println("Malformed Entry. Default to Logging Out");
-			        		msgChoice = 1;
-			        	}
-			        		
-			        	switch(msgChoice) {
-			        		
-			        	// TODO: Implement the different requests that can be made by the client. Use the RequestHandler
-			        	// TODO: Implement the different requests able to be received and interpret them correctly. Use the RequestHandler
-			        	case(0):
-			        			
-			        		
-			       			//Request newTxtMsg = new Request(2, 0, );
-			       			
-			       			//objectOutputStream.writeObject(newTxtMsg);
-					        //objectOutputStream.flush();
 	
-						    //Request inboundTxtMsg = (Request) objectInputStream.readObject();
-						       
-						    //System.out.println("Server responded: " + inboundTxtMsg.getText());
-						        
-						break;
-			        		
-			        	// Logout Message logic.
-			        	// Makes a message of type "logout" and status "success", before writing it to the server with objectOutputStream
-			       		// The server will respond with the logout message.
-			       		// This will lead to the loop breaking and the client closing.
-			       		case(1):
-			        		
-			       			Request newLogOutMsg = new Request("Logging out.", "USER", "NULL", 8, 0, -1);
-			        		
-			        		objectOutputStream.writeObject(newLogOutMsg);
-					        objectOutputStream.flush();
-	//					        
-					        Request inboundLogOutMsg = (Request) objectInputStream.readObject();
-	//					        
-						    System.out.println("Server responded: " + inboundLogOutMsg.getData());
-						    System.out.println("You are now going to be logged out for the sake of testing.");
-						        
-						break;
-			        		
-			        	default:
-			        		System.err.println("Unexpected input.");
-			        			
-			        	break;
-			        	}
-			        		
-			        }while(msgChoice != 1);
-			        	
-			       
-			    }*/
-			        
-			        
-			
-		
+	public Request handleRequest(Request req) {
+		return requestHandler.handleRequest(req, clientSocket);
+	}
 	
+	public void sendResponse(Request req) throws IOException{
+		objectOutputStream.writeObject(req);
+		objectOutputStream.flush();
+	}
 	
 	// getters
 	public String getServerIP() {
