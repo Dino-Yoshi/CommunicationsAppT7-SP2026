@@ -1,6 +1,9 @@
 package client;
 
 import javax.swing.*;
+
+import networking.Request;
+
 import java.awt.*;
 import java.util.*;
 
@@ -47,6 +50,9 @@ public class GroupCreationView extends JPanel{
         searchResultsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         leftPanel.add(new JScrollPane(searchResultsList), BorderLayout.CENTER);
         
+        
+        
+        
         //adds the add memeber button
         JButton addMemberButton = new JButton("Add to Group");
         leftPanel.add(addMemberButton, BorderLayout.SOUTH);
@@ -82,6 +88,10 @@ public class GroupCreationView extends JPanel{
         
         //sets up our Active listeners
         searchButton.addActionListener(e -> {
+        	
+    		Request req = new Request("", "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
+    		mainGUI.getNetworkClient().sendRequest(req);
+        	
             searchResultsModel.clear();
             searchResultsModel.addElement("Victor");
             searchResultsModel.addElement("Clarize");
@@ -141,6 +151,13 @@ public class GroupCreationView extends JPanel{
     			membersList+= ",";
     		}
     	}
+    	
+    	
+		// Darien Test (Searching)
+    	String msg = groupName + "," + membersList;
+		Request req = new Request(msg, "USER", "SERVER", 6, mainGUI.getCurrentUser().getUID(), -1);
+		mainGUI.getNetworkClient().sendRequest(req);
+		//
     	
     	JOptionPane.showMessageDialog(this, "Group: "+groupName + " created successfully with members: "  + membersList);
     	
