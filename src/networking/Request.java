@@ -16,6 +16,7 @@ public class Request implements Serializable{
 	private int recipientID; // id to send to
 
 	// ENUMERATION FOR REQUEST TYPE
+						  //      0             1          2          3               4           5         6          7       8        9           10            11     12
 	public enum REQUESTTYPE {SENDMESSAGE, REGISTRATION, SEARCH, VIEWCONTACTS, LOADCHATHISTORY, READLOG, CREATEGROUP, LOGIN, LOGOUT, ADDCONTACT, REMOVECONTACT, SUCCESS, NULL};
 	
 	// constructor
