@@ -3,6 +3,7 @@ package networking;
 
 
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -11,6 +12,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import server.RequestHandler;
 
 public class ServerNetwork {
 	
@@ -29,7 +32,10 @@ public class ServerNetwork {
 		// Create a Server Socket
         ServerSocket ss = new ServerSocket(port);
         System.out.println("ServerSocket awaiting connections...");
+        clients = new ArrayList<Socket>();
+        
         setStatus(0); // Server is ONLINE
+        
 
         while (true) {
 
@@ -64,7 +70,7 @@ public class ServerNetwork {
 		private final Socket clientSocket;
 		private String username;
 		private boolean authenticated;
-		//private final RequestHandler requestHandler;
+		private final RequestHandler requestHandler;
 		
 		
 		// Constructor
@@ -73,8 +79,10 @@ public class ServerNetwork {
 			this.clientSocket = socket;
 			this.username = null;
 			this.authenticated = false;
-			//this.requestHandler = null;
+			this.requestHandler = new RequestHandler();
 			
+			// load the users...? feels like the requestHandler should be a singleton if its going to need to load users for ALL active users...
+			//requestHandler.getAuth().loadUsers((requestHandler.getStorageManager().loadUsers()));
 		}
 
 		// methods
@@ -96,48 +104,57 @@ public class ServerNetwork {
 		        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 			        
 		        Request InboundMsg = null;
+		        Request OutboundMsg = null;
 			        
-		        // ignores all other message types until the read message is that of a LOGIN type.
-		        // in other words, keep listening for a login message object. 
-		        do {
-		        	try {
-		        		InboundMsg = (Request) objectInputStream.readObject();
-		        		if(InboundMsg.getType() != Request.REQUESTTYPE.LOGIN) {
-		        			InboundMsg = null;
-		        		}
-		        	}catch(ClassNotFoundException e) {
-		        		e.printStackTrace();
-		        	}
-			        	
-			        	
-		        }while(InboundMsg == null);
-			        
-			        
-		        // tell the client they've just logged in, that way they can be prompted to start making messages.
-		        // specifically return a new message object of status "SUCCESS" and type "login".
+		       
 		        
-		        // TODO: obviously login is not this simple, at minimum password and username must be processed from the incoming
-		        // message.
-		        Request OutboundMsg = new Request("You have logged in.", "SERVER", "USER", 11, -1, 0);
-		        objectOutputStream.writeObject(OutboundMsg);
-		        objectOutputStream.flush();
+		        do {
+		        	do {
+			        	try {
+			        		InboundMsg = (Request) objectInputStream.readObject();
+			        		if(InboundMsg.getType() != Request.REQUESTTYPE.LOGIN) {
+			        			InboundMsg = null;
+			        		}
+			        	}catch(ClassNotFoundException e) {
+			        		e.printStackTrace();
+			        	}catch(EOFException e) { // connection is terminated abruptly, and the user must attempt another login.
+			        		System.err.println("Closing " + clientSocket.getInetAddress()
+							.getHostAddress() + " connection due to failed login attempt.");
+			        		return;
+			        	}
+				        	
+				        	
+			        }while(InboundMsg == null);
+		        	
+		        	// process the user's login request
+		        	OutboundMsg = requestHandler.handleRequest(InboundMsg, clientSocket);
+		        	
+		        	objectOutputStream.writeObject(OutboundMsg);
+				    objectOutputStream.flush();
+		        	
+		        }while(OutboundMsg.getType() == Request.REQUESTTYPE.NULL);
 			        
 		        // now continuously read for text messages or a logout message from clients.
 		        do {
 		        	try {
 		        		InboundMsg = (Request) objectInputStream.readObject();
+		        		
+		        		OutboundMsg = requestHandler.handleRequest(InboundMsg, clientSocket);
+		        		
+		        		objectOutputStream.writeObject(OutboundMsg);
+	        			objectOutputStream.flush();
 			        		
 		        		// TODO: Interpret all incoming messages using the RequestHandler
 		        		
 		        		
-		        		
+		        		/*
 		        		if(InboundMsg.getType() == Request.REQUESTTYPE.SENDMESSAGE) {
 			        		
-		        			/*
+		        			
 		        			OutboundMsg = new Request(2, 0, InboundMsg.getText().toUpperCase());
 		        			objectOutputStream.writeObject(OutboundMsg);
 		        			objectOutputStream.flush();
-		        			*/
+		        			
 			        			
 		        		// On logout, returns a new message with status "SUCCESS".
 		        		}else if(InboundMsg.getType() == Request.REQUESTTYPE.LOGOUT) {
@@ -151,6 +168,7 @@ public class ServerNetwork {
 		        		}else {
 		        			System.out.println("Ignoring Message of type LOGIN");
 		        		}
+		        		*/
 		        		
 		        	}catch(ClassNotFoundException e) {
 		        		e.printStackTrace();
