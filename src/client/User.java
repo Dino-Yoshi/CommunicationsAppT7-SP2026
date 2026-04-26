@@ -29,7 +29,7 @@ public class User {
 	}
 	
 	// getters
-
+	
 	public int getUID() {
 		return UID;
 	}
