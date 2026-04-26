@@ -15,7 +15,7 @@ public class UserGetStatus {
 	
 	@DisplayName(value = "Get Status")
 	@Test
-	public void UserGetUIDTest() {
+	public void UserGetStatusTest() {
 		User u = new User("DinoYoshi", "qwerty");
 		assertEquals(USERSTATUS.ONLINE, u.getStatus()); 
 	}

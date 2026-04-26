@@ -14,7 +14,7 @@ public class UserGetUserName {
 	
 	@DisplayName(value = "Get Username")
 	@Test
-	public void UserGetUIDTest() {
+	public void UserGetUsernameTest() {
 		User u = new User("DinoYoshi", "qwerty");
 		assertEquals("DinoYoshi", u.getUsername()); 
 	}
