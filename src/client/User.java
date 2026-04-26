@@ -10,7 +10,7 @@ public class User {
 	protected boolean IT;
 	private USERSTATUS status;
 	
-	private enum USERSTATUS {ONLINE, AWAY, DND, OFFLINE, NULL};
+	public enum USERSTATUS {ONLINE, AWAY, DND, OFFLINE, NULL};
 	
 	// constructor
 	
