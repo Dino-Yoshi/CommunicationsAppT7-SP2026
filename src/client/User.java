@@ -14,7 +14,7 @@ public class User {
 	
 	// constructor
 	
-	User(String u, String p){
+	public User(String u, String p){
 		username = u;
 		password = p;
 		IT = false;
