@@ -16,9 +16,8 @@ public class UserGetUID {
 	@Test
 	public void UserGetUIDTest() {
 		User u = new User("DinoYoshi", "qwerty");
-		assertEquals(2, u.getUID()); 
-		// UID is 2, as this is the second User Created on Suite run.
-		// UID is 1 when ran independently. 
+		assertEquals(-1, u.getUID()); 
+		// System sets UID based on Server Information normally, otherwise -1. 
 	}
 	
 }
