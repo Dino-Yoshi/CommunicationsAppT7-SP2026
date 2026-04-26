@@ -8,7 +8,7 @@ import org.junit.platform.suite.api.SelectClasses;
 @Suite
 
 // Specify Class Selection
-@SelectClasses({UserConstructor.class})
+@SelectClasses({UserConstructor.class, UserGetUID.class})
 
 
 
