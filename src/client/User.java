@@ -4,7 +4,7 @@ public class User {
 	
 	// attribs
 	private int UID;
-	//private static int count = 0;
+	private static int count = 0;
 	private String username;
 	private String password;
 	protected boolean IT;
@@ -19,6 +19,7 @@ public class User {
 		password = p;
 		IT = false;
 		status = USERSTATUS.ONLINE;
+		UID = ++count;
 	}
 	
 	// methods
