@@ -4,7 +4,7 @@ public class User {
 	
 	// attribs
 	private int UID;
-	private static int count = 0;
+	//private static int count = 0;
 	private String username;
 	private String password;
 	protected boolean IT;
@@ -19,7 +19,7 @@ public class User {
 		password = p;
 		IT = false;
 		status = USERSTATUS.ONLINE;
-		UID = ++count;
+		UID = -1;
 	}
 	
 	// methods
@@ -51,9 +51,9 @@ public class User {
 	}
 	
 	// setters
-
-	public void setUID(int uID) {
-		UID = uID;
+	
+	public void setUID(int c) {
+		this.UID = c;
 	}
 
 	public void setUsername(String username) {
