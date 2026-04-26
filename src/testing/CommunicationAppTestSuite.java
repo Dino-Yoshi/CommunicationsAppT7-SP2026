@@ -9,7 +9,7 @@ import org.junit.platform.suite.api.SelectClasses;
 
 // Specify Class Selection
 @SelectClasses({UserConstructor.class, UserGetUID.class, UserGetUserName.class, UserGetPassword.class, UserGetStatus.class,
-	UserIsIT.class, })
+	UserIsIT.class, UserSetUsername.class, })
 
 
 
