@@ -3,7 +3,6 @@ package testing;
 //import junit.framework.*;
 
 import client.User;
-import client.User.USERSTATUS;
 
 import static org.junit.jupiter.api.Assertions.*;
 
