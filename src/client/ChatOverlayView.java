@@ -49,7 +49,7 @@ public class ChatOverlayView extends JPanel{
 		converPanel.setBorder(BorderFactory.createTitledBorder("Active Conversations"));
 		
 		//set up the area for our text conversations
-		chatHistory = new JTextArea("Select a to start Chatting with: \n");
+		chatHistory = new JTextArea("Click or create a chat to start talking with people! \n");
 		chatHistory.setEditable(false); // to prevent users typing in the convo area
 		chatHistory.setLineWrap(true);
 		converPanel.add(new JScrollPane(chatHistory), BorderLayout.CENTER);
@@ -154,6 +154,8 @@ public class ChatOverlayView extends JPanel{
 	}
 	
 	public void clickLogout() {
+		
+		
 		
 		// test request, but should dynamically make one based on the user's actual id.
 		Request req = new Request(mainGUI.getCurrentUser().getUsername(), "USER", "NULL",8,mainGUI.getCurrentUser().getUID(),-1);
