@@ -87,7 +87,7 @@ public class StorageManager {
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {// opens the conversation file in append mode
         	
-            writer.write(message.getSenderID() + "->" + auth.getIdByUsername(res[1]) + ": " + res[0]);	// writes the message in a readable sender to recipient format
+            writer.write(auth.getUsernameById(message.getSenderID()) + ": " + res[0]);	// writes the message in a readable sender to recipient format
             writer.newLine();		// inserts a newline so each message stays on its own line
         } catch (IOException e) {	// catches file writing errors
             System.out.println("Failed to save message: " + e.getMessage());	// prints the error to the console
