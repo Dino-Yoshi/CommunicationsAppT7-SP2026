@@ -155,8 +155,6 @@ public class ChatOverlayView extends JPanel{
 	
 	public void clickLogout() {
 		
-		
-		
 		// test request, but should dynamically make one based on the user's actual id.
 		Request req = new Request(mainGUI.getCurrentUser().getUsername(), "USER", "NULL",8,mainGUI.getCurrentUser().getUID(),-1);
 		Request decision = mainGUI.getNetworkClient().sendRequest(req);
