@@ -36,8 +36,10 @@ public class ChatOverlayView extends JPanel{
 		//set up our navigation buttons: create group and logout
 		JPanel navButtons = new JPanel(new GridLayout(2,1,5,5));
 		JButton createGroupButton = new JButton("Create Group");
+		JButton refreshButton = new JButton("Refresh");
 		JButton logoutButton = new JButton("Logout");
 		
+		navButtons.add(refreshButton);
 		navButtons.add(createGroupButton);
 		navButtons.add(logoutButton);
 		contactsPanel.add(navButtons, BorderLayout.SOUTH); //adds to bottom of our contacts panel
@@ -67,19 +69,20 @@ public class ChatOverlayView extends JPanel{
 		add(splitPane, BorderLayout.CENTER);
 		
 		//our action Listners
+		refreshButton.addActionListener(e -> loadContacts());
 		sendButton.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		messageInputUI.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		contactsList.addListSelectionListener(e->{
 			
-			Request req = new Request("Fetching Contacts", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
-			mainGUI.getNetworkClient().sendRequest(req);
 			if(!e.getValueIsAdjusting() && contactsList.getSelectedValue() !=null) {
 				openConversation(contactsList.getSelectedValue());
 			}
 		});
 		logoutButton.addActionListener(e-> clickLogout());
 		
-		createGroupButton.addActionListener(e -> mainGUI.switchView(VIEWSTATE.GROUPCREATION));
+		createGroupButton.addActionListener(e -> {
+			mainGUI.switchView(VIEWSTATE.GROUPCREATION);
+		});
 	}
 	
 
@@ -87,13 +90,18 @@ public class ChatOverlayView extends JPanel{
 	//Methods
 	//clears our previous state of contacts and updates it with our newer ones
 	public void loadContacts() {
+		
 		contactsModel.clear();
 		
-		contactsModel.addElement("Darien");
-		contactsModel.addElement("Clarize");
-		contactsModel.addElement("Victor");
+		Request req = new Request("Fetching Contacts", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
+		Request res = mainGUI.getNetworkClient().sendRequest(req);
 		
-		contactsModel.addElement("Group 7");
+		String[] listOfContacts = res.getData().split(",");
+		
+		for(int i = 0; i < listOfContacts.length; i++) {
+			contactsModel.addElement(listOfContacts[i]);
+		}
+		
 	}
 	
 	public void openConversation(String targetChat) {
