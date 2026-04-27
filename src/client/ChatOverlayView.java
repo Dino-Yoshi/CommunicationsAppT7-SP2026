@@ -106,10 +106,10 @@ public class ChatOverlayView extends JPanel{
 	
 	public void openConversation(String targetChat) {
 		
-		Request req = new Request("Fetching Chatlog", "USER", "SERVER", 4, mainGUI.getCurrentUser().getUID(), -1);
-		mainGUI.getNetworkClient().sendRequest(req);
+		Request req = new Request(targetChat, "USER", "USER", 4, mainGUI.getCurrentUser().getUID(), -1);
+		Request res = mainGUI.getNetworkClient().sendRequest(req);
 		this.currentTargetID = targetChat;
-		chatHistory.setText("Conversation with: " + currentTargetID+ "\n");
+		chatHistory.setText("Conversation with: " + currentTargetID + "\n");
 	}
 	
 	public void sendMessage(String content) {
@@ -120,19 +120,21 @@ public class ChatOverlayView extends JPanel{
 		
 		chatHistory.append("You: " + content + "\n");
 		
+		
+		/*
+		
 		//just dummy response to format of texting
 		if(!currentTargetID.isEmpty()) {
 			chatHistory.append(currentTargetID + ": I recieved your message!\n");
 		}
 		
+		*/
+		
 		messageInputUI.setText("");//reset text input area
 		
 		// Darien Test (Sending Message)
-		Request req = new Request(content, "USER", "SERVER", 0, mainGUI.getCurrentUser().getUID(), -1);
-		mainGUI.getNetworkClient().sendRequest(req);
-		//
-		
-
+		Request req = new Request(content + "," + currentTargetID, "USER", "USER", 0, mainGUI.getCurrentUser().getUID(), -1);
+		Request res = mainGUI.getNetworkClient().sendRequest(req);
 		
 	}
 	
@@ -154,8 +156,5 @@ public class ChatOverlayView extends JPanel{
 		}else {
 			JOptionPane.showMessageDialog(this, "An unknown exception has occurred when attempting to log out... Please contact your admin.", "Logout Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		
 	}
-	
 }
