@@ -3,6 +3,7 @@ package client;
 import javax.swing.*;
 
 import networking.Request;
+import networking.Request.REQUESTTYPE;
 
 import java.awt.*;
 
@@ -137,9 +138,9 @@ public class ChatOverlayView extends JPanel{
 		
 		// test request, but should dynamically make one based on the user's actual id.
 		Request req = new Request(mainGUI.getCurrentUser().getUsername(), "USER", "NULL",8,mainGUI.getCurrentUser().getUID(),-1);
-		int decision = mainGUI.getNetworkClient().sendRequest(req);
+		Request decision = mainGUI.getNetworkClient().sendRequest(req);
 		
-		if(decision == 0) {
+		if(decision != null && decision.getType() == REQUESTTYPE.SUCCESS) {
 			mainGUI.getNetworkClient().disconnect();
 			mainGUI.switchView(VIEWSTATE.LOGIN);
 		}else {
