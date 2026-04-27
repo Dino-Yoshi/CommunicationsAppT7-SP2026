@@ -29,14 +29,14 @@ public class ClientNetwork {
 	}
 		
 	// methods
-	public int connectToServer(Request req, User user) {
+	public Request connectToServer(Request req, User user) {
 		if(status != CLIENTSTATUS.CONNECTED) { // the server cannot already be connected.
 			try {
 				
 				// if the client is not connected, the next request HAS to be a login attempt. 
 				if(req.getType() != REQUESTTYPE.LOGIN) {
 					System.err.println("Not a login request type. Ignored. No connection attempt was made to the server.");
-					return -1; // connection failed. 
+					return null; // connection failed. 
 				}
 				
 				// connect to our server
@@ -61,11 +61,11 @@ public class ClientNetwork {
 			    if(inbound.getType() == REQUESTTYPE.SUCCESS) {
 			    	status = CLIENTSTATUS.CONNECTED;
 			    	user.setUID(inbound.getRecipientID());
-			    	//System.out.println(getStatus()); debug
-			    	return 0; // connection successfully established.
+			    	System.out.println(inbound.getData()); 
+			    	return inbound; // connection successfully established.
 			    }else if(inbound.getType() == REQUESTTYPE.NULL) {
 			    	disconnect();
-			    	return -3; // credential failure.
+			    	return null; // credential failure.
 			    }else {
 			    	/*
 			    	objectOutputStream = null; // streams are just set to null here as they may be used again.
@@ -73,20 +73,20 @@ public class ClientNetwork {
 			    	clientSocket.close(); // socket is okay to close for now. 
 			    	*/
 			    	disconnect();
-			    	return -1; // connection failed.
+			    	return null; // connection failed.
 			    }
 			    
 			    
 			    
 			}catch(IOException e) {
 				e.printStackTrace();
-				return -4; // ioexception
+				return null; // ioexception
 			}catch(ClassNotFoundException e) {
 		    	e.printStackTrace();
-		    	return -5; // classnotfoundexception
+		    	return null; // classnotfoundexception
 		    }
 		}else {
-			return 1; // server is already connected. 
+			return null; // server is already connected. 
 		}
 	}
 	

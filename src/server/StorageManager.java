@@ -21,11 +21,13 @@ public class StorageManager {
 	
 	// ATTRIBUTES
     private String userFilePath;							// stores the file path where username and password pairs are saved
+    private String ITUserFilePath;
     private String messageDirectory;						// stores the directory where conversation files are saved
     private Map<Integer, List<Request>> offlineMessages;	// maps recipient ids to queued Request objects for offline delivery
 
     // CONSTRUCTOR
-    public StorageManager(String userFilePath, String messageDirectory) {
+    public StorageManager(String ITUserFilePath, String userFilePath, String messageDirectory) {
+    	this.ITUserFilePath = ITUserFilePath;
         this.userFilePath = userFilePath;					// stores the user file path
         this.messageDirectory = messageDirectory;			// stores the message directory path
         this.offlineMessages = new HashMap<>();				// creates the offline message map
@@ -69,6 +71,29 @@ public class StorageManager {
         }	// end try-catch block
         return users;	// returns the loaded user map
     }
+    
+    // loads all saved username,password pairs from the user file
+    public synchronized Map<String, String> loadITUsers() {
+        Map<String, String> users = new LinkedHashMap<>();	// creates the map that will hold loaded users
+        File file = new File(ITUserFilePath);				// creates a File object for the user file
+        
+        if (!file.exists()) {	// checks whether the user file exists yet
+            return users;		// returns an empty map if no user file exists yet
+        }	// end missing file check
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {	// opens the user file for reading
+            String line;	// declares a variable for each line read from the file
+            while ((line = reader.readLine()) != null) {		// loops through every line in file
+                String[] parts = line.split(",", 2);			// splits each line into two parts at the first comma
+                if (parts.length == 2 && !parts[0].isBlank()) {	// checks that the line has a username and password
+                    users.put(parts[0].trim(), parts[1]); 		// stores the cleaned username and password in the map
+                }
+            }
+        } catch (IOException e) {	// catches file reading errors
+            System.out.println("Failed to load users: " + e.getMessage());	// prints the error to the console
+        }	// end try-catch block
+        return users;	// returns the loaded user map
+    }
 
     // saves a direct message request into a conversation file
     public synchronized void saveMessage(Request message, UserAuthenticator auth) {
@@ -86,7 +111,6 @@ public class StorageManager {
         String filePath = buildConversationPath(message.getSenderID(), auth.getIdByUsername(res[1]), auth);			// computes the conversation file path
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {// opens the conversation file in append mode
-        	
             writer.write(auth.getUsernameById(message.getSenderID()) + ": " + res[0]);	// writes the message in a readable sender to recipient format
             writer.newLine();		// inserts a newline so each message stays on its own line
         } catch (IOException e) {	// catches file writing errors

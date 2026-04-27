@@ -28,9 +28,10 @@ public class RequestHandler {
         this.groupManager = new GroupManager();	// creates the group manager
         this.contactManager = new ContactManager(); 			// creates the contact manager
         this.loggingManager = new LoggingManager("server.log"); // creates the logging manager using a simple log file
-        this.storageManager = new StorageManager("users.txt", "messages"); 	// creates the storage manager using a user file and message folder
+        this.storageManager = new StorageManager("ITUsers.txt", "users.txt", "messages"); 	// creates the storage manager using a user file and message folder
         this.connectionManager = new ConnectionManager(); 					// creates the connection manager
         this.auth.loadUsers(this.storageManager.loadUsers()); 				// loads saved users into the authentication manager
+        this.auth.loadITUsers(this.storageManager.loadITUsers());			// loads saved ITUsers into the authentication manager
     }
 
     
@@ -119,9 +120,8 @@ public class RequestHandler {
         String[] credentials = parseTwoValues(request.getData());	// parses username and password from request data
         String username = credentials[0];	// stores the username
         String password = credentials[1];	// stores the password
-        boolean authenticated = auth.authenticate(username, password);	// attempts to authenticate the user
         
-        if (authenticated) {	// checks if authentication succeeded
+        if (auth.ITAuthenticate(username, password)) {	// checks if IT authentication succeeded
             Integer userId = auth.getIdByUsername(username);	// gets the logged in user's id
             if (client != null) {	// checks if servernetwork provided a client handler object
                 connectionManager.bindUsername(username, client);	// maps the username to the connected client handler
@@ -131,10 +131,24 @@ public class RequestHandler {
             loggingManager.saveLogs();	// saves the log
             
             // String d, String sType, String rType, int t, int sID, int rID
-            Request outbound = new Request("SUCCESS: logged in as " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), "SERVER", "USER", 11, -1, userId);
+            Request outbound = new Request("SUCCESS: logged in as an IT, " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), "SERVER", "USER", 11, 0, userId);
             return outbound;
             //return createResponse("SUCCESS: logged in as " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), Request.REQUESTTYPE.SUCCESS, -1, userId);	// returns success response
-        }	// end authentication success check
+        }else if(auth.authenticate(username, password)) {
+        	Integer userId = auth.getIdByUsername(username);	// gets the logged in user's id
+            if (client != null) {	// checks if servernetwork provided a client handler object
+                connectionManager.bindUsername(username, client);	// maps the username to the connected client handler
+            }	// end client binding check
+            List<Request> offlineMessages = storageManager.getOfflineMessages(userId); // gets queued offline messages for this user
+            loggingManager.addStructuredLog(LogType.LOGIN_SUCCESS, username, "SERVER", "login successful");	// logs successful login
+            loggingManager.saveLogs();	// saves the log
+            
+            // String d, String sType, String rType, int t, int sID, int rID
+            Request outbound = new Request("SUCCESS: logged in as a USER, " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), "SERVER", "USER", 11, -1, userId);
+            return outbound;
+        }// end authentication success check
+        	
+        
         
         loggingManager.addStructuredLog(LogType.LOGIN_FAILED, username, "SERVER", "login failed");	// logs failed login
         loggingManager.saveLogs();	// saves the log
@@ -370,7 +384,8 @@ public class RequestHandler {
 
     // checks if the request came from an it user
     private boolean isITRequest(Request request) {
-        return request != null && "IT".equalsIgnoreCase(request.getSenderType());	// returns true only for sender type it
+    	String username = auth.getUsernameById(request.getSenderID());
+        return username != null && auth.isIT(username); 				// returns true only for sender type it
     }
 
     // checks if the request sender is logged in
