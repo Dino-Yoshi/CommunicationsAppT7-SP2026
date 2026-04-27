@@ -29,14 +29,14 @@ public class ClientNetwork {
 	}
 		
 	// methods
-	public int connectToServer(Request req, User user) {
+	public Request connectToServer(Request req, User user) {
 		if(status != CLIENTSTATUS.CONNECTED) { // the server cannot already be connected.
 			try {
 				
 				// if the client is not connected, the next request HAS to be a login attempt. 
 				if(req.getType() != REQUESTTYPE.LOGIN) {
 					System.err.println("Not a login request type. Ignored. No connection attempt was made to the server.");
-					return -1; // connection failed. 
+					return null; // connection failed. 
 				}
 				
 				// connect to our server
@@ -61,11 +61,11 @@ public class ClientNetwork {
 			    if(inbound.getType() == REQUESTTYPE.SUCCESS) {
 			    	status = CLIENTSTATUS.CONNECTED;
 			    	user.setUID(inbound.getRecipientID());
-			    	//System.out.println(getStatus()); debug
-			    	return 0; // connection successfully established.
+			    	System.out.println(inbound.getData()); 
+			    	return inbound; // connection successfully established.
 			    }else if(inbound.getType() == REQUESTTYPE.NULL) {
 			    	disconnect();
-			    	return -3; // credential failure.
+			    	return null; // credential failure.
 			    }else {
 			    	/*
 			    	objectOutputStream = null; // streams are just set to null here as they may be used again.
@@ -73,20 +73,20 @@ public class ClientNetwork {
 			    	clientSocket.close(); // socket is okay to close for now. 
 			    	*/
 			    	disconnect();
-			    	return -1; // connection failed.
+			    	return null; // connection failed.
 			    }
 			    
 			    
 			    
 			}catch(IOException e) {
 				e.printStackTrace();
-				return -4; // ioexception
+				return null; // ioexception
 			}catch(ClassNotFoundException e) {
 		    	e.printStackTrace();
-		    	return -5; // classnotfoundexception
+		    	return null; // classnotfoundexception
 		    }
 		}else {
-			return 1; // server is already connected. 
+			return null; // server is already connected. 
 		}
 	}
 	
@@ -130,7 +130,7 @@ public class ClientNetwork {
 							return null; // some sort of error occurred, can't log them out!
 						}
 
-					case SENDMESSAGE:
+					case SENDMESSAGE:							// DONE
 						
 						sendResponse(req);
 						
@@ -143,7 +143,7 @@ public class ClientNetwork {
 							return null; // send message failed: either the recipient doesn't exist (more likely), or the sender is not logged in.
 						}
 						
-					case REGISTRATION:							// handles registration requests
+					case REGISTRATION:							// handles registration requests TODO
 		                
 						sendResponse(req);
 						
@@ -156,7 +156,7 @@ public class ClientNetwork {
 							return null; // registration failed: either user attempts to register, or registration failed (more likely)
 						}
 		            	
-		            case SEARCH: 							// handles user search requests
+		            case SEARCH: 							// handles user search requests DONE
 		                
 						sendResponse(req);
 						
@@ -169,7 +169,7 @@ public class ClientNetwork {
 							return null; // search failed: user is not logged in. (unlikely) a better error message is when users aren't found.
 						}
 		                
-		            case VIEWCONTACTS: 						// handles view contacts requests
+		            case VIEWCONTACTS: 						// handles view contacts requests DONE
 		                
 						sendResponse(req);
 						
@@ -182,7 +182,7 @@ public class ClientNetwork {
 							return null; // search failed: user is unknown/not found
 						}
 		            	
-		            case ADDCONTACT: 						// handles add contact requests
+		            case ADDCONTACT: 						// handles add contact requests TODO: Redundant; Group Creation already accomplishes this task.
 		                
 						sendResponse(req);
 						
@@ -195,7 +195,7 @@ public class ClientNetwork {
 							return null; // addcontact failed: user being added is not known, dosen't exist, or the action fails. most likely: user doesn't exist.
 						}
 		                
-		            case REMOVECONTACT: 					// handles remove contact requests
+		            case REMOVECONTACT: 					// handles remove contact requests TODO: No GUI pane to accomplish this. Could scrap this for time.
 		                
 						sendResponse(req);
 						
@@ -208,7 +208,7 @@ public class ClientNetwork {
 							return null; // remove contact failed: user is unknown/not found, or the action fails. more likely: user not found.
 						}
 		                
-		            case LOADCHATHISTORY: 					// handles chat history requests
+		            case LOADCHATHISTORY: 					// handles chat history requests // DONE
 		                
 						sendResponse(req);
 						
@@ -216,12 +216,13 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
+							System.out.println("Type: " + inbound.getType());
 							return inbound; 
 						}else {
 							return null; // doChatLog/LoadChatLog failed: user is unknown/not found
 						}
 		                
-		            case READLOG: 							// handles read log requests
+		            case READLOG: 							// handles read log requests TODO: 
 		                
 						sendResponse(req);
 						
@@ -234,7 +235,7 @@ public class ClientNetwork {
 							return null; // doReadLog failed: if user is not an ITUser
 						}
 		                
-		            case CREATEGROUP:						// handles create group requests
+		            case CREATEGROUP:						// handles create group requests // DONE
 		            	
 						sendResponse(req);
 						

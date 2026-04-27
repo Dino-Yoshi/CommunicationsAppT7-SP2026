@@ -5,3 +5,5 @@ Darien,1
 Derek,1
 Victor,2
 Clarize,3
+yourabot,letmein
+Wumbo01,uranium

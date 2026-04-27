@@ -21,8 +21,11 @@ public class ServerNetwork {
 	private static SERVERSTATUS status; // status of server.
 	private static ArrayList<Socket> clients; // array list of sockets which are all currently connected clients.
 	private static int numConnections; // number of currently active connections.
+	private static RequestHandler requestHandler;
 	
 	protected enum SERVERSTATUS {ONLINE, OFFLINE, ERROR, NULL}; // enumeration of server status
+	
+	
 	
 	// "constructor"
 	public static void main(String[] args) throws IOException, ClassNotFoundException{
@@ -30,6 +33,7 @@ public class ServerNetwork {
 		// Create a Server Socket
         ServerSocket ss = new ServerSocket(port);
         System.out.println("ServerSocket awaiting connections...");
+        requestHandler = new RequestHandler();
         clients = new ArrayList<Socket>();
         
         setStatus(0); // Server is ONLINE
@@ -68,7 +72,7 @@ public class ServerNetwork {
 		private final Socket clientSocket;
 		private String username;
 		private boolean authenticated;
-		private final RequestHandler requestHandler;
+		
 		private ObjectOutputStream objectOutputStream;
 		private ObjectInputStream objectInputStream;
 		
@@ -79,7 +83,7 @@ public class ServerNetwork {
 			this.clientSocket = socket;
 			this.username = null;
 			this.authenticated = false;
-			this.requestHandler = new RequestHandler();
+			
 			
 			// load the users...? feels like the requestHandler should be a singleton if its going to need to load users for ALL active users...
 			//requestHandler.getAuth().loadUsers((requestHandler.getStorageManager().loadUsers()));

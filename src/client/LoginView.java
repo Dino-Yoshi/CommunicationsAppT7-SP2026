@@ -110,30 +110,19 @@ public class LoginView extends JPanel{
 		 
 		 User user = new User(username, password);
 		 
-		 int success = mainGUI.getNetworkClient().connectToServer(loginReq, user);
+		 Request res = mainGUI.getNetworkClient().connectToServer(loginReq, user);
 		 
 		 // either login or fail
-		 if(success == 0) {
+		 if(res != null) {
 			 System.out.println("Successful login by: "+ username);
 			 
 			 // new user to set id
-			 //handles the login if an admin were to login in, just to view admin panel
-			 if(username.equals("admin")) {
-				 ITUser adminUser = new ITUser(username, password);
-				 adminUser.setUID(user.getUID());
-				 mainGUI.setCurrentUser(adminUser);
-				 mainGUI.switchView(VIEWSTATE.ITPANEL);
-			 }else {
-				 mainGUI.setCurrentUser(user);
-				 mainGUI.switchView(VIEWSTATE.MENU);
+			 if(res.getSenderID() == 0) {
+				 mainGUI.getChatOverlayView().setITButton();
 			 }
 			 
 			 clearFields();
 			 
-		 }else if(success == -3) {
-			 //System.out.println("Failed LOGIN ATTEMPT");
-				
-			 JOptionPane.showMessageDialog(this, "Invalid Credentials", "Login Error", JOptionPane.ERROR_MESSAGE);
 		 }else {
 			 JOptionPane.showMessageDialog(this, "An unknown exception has occurred. Please contact your admin.", "Unknown Error", JOptionPane.ERROR_MESSAGE);
 		 }

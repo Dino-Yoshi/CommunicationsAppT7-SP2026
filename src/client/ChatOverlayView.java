@@ -16,6 +16,7 @@ public class ChatOverlayView extends JPanel{
 	private DefaultListModel<String> contactsModel;
 	private JList<String> contactsList;
 	private JTextArea chatHistory;
+	private JButton ITPanelButton;
 	private JTextField messageInputUI;
 	
 //constructor
@@ -36,10 +37,14 @@ public class ChatOverlayView extends JPanel{
 		//set up our navigation buttons: create group and logout
 		JPanel navButtons = new JPanel(new GridLayout(2,1,5,5));
 		JButton createGroupButton = new JButton("Create Group");
+		ITPanelButton = new JButton("IT Panel");
 		JButton refreshButton = new JButton("Refresh");
 		JButton logoutButton = new JButton("Logout");
 		
+		ITPanelButton.setEnabled(false); // disabled by default.
+		
 		navButtons.add(refreshButton);
+		navButtons.add(ITPanelButton);
 		navButtons.add(createGroupButton);
 		navButtons.add(logoutButton);
 		contactsPanel.add(navButtons, BorderLayout.SOUTH); //adds to bottom of our contacts panel
@@ -49,7 +54,7 @@ public class ChatOverlayView extends JPanel{
 		converPanel.setBorder(BorderFactory.createTitledBorder("Active Conversations"));
 		
 		//set up the area for our text conversations
-		chatHistory = new JTextArea("Select a to start Chatting with: \n");
+		chatHistory = new JTextArea("Click or create a chat to start talking with people! \n");
 		chatHistory.setEditable(false); // to prevent users typing in the convo area
 		chatHistory.setLineWrap(true);
 		converPanel.add(new JScrollPane(chatHistory), BorderLayout.CENTER);
@@ -69,8 +74,12 @@ public class ChatOverlayView extends JPanel{
 		add(splitPane, BorderLayout.CENTER);
 		
 		//our action Listners
-		refreshButton.addActionListener(e -> loadContacts());
+		refreshButton.addActionListener(e ->{ loadContacts(); openConversation(currentTargetID); });
 		sendButton.addActionListener(e-> sendMessage(messageInputUI.getText()));
+		
+		
+		
+		ITPanelButton.addActionListener(e -> {mainGUI.switchView(VIEWSTATE.ITPANEL);});
 		messageInputUI.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		contactsList.addListSelectionListener(e->{
 			
@@ -135,10 +144,19 @@ public class ChatOverlayView extends JPanel{
 	
 	public void openConversation(String targetChat) {
 		
-		Request req = new Request("Fetching Chatlog", "USER", "SERVER", 4, mainGUI.getCurrentUser().getUID(), -1);
-		mainGUI.getNetworkClient().sendRequest(req);
+		
+		Request req = new Request(targetChat, "USER", "USER", 4, mainGUI.getCurrentUser().getUID(), -1);
+		Request res = mainGUI.getNetworkClient().sendRequest(req);
 		this.currentTargetID = targetChat;
-		chatHistory.setText("Conversation with: " + currentTargetID+ "\n");
+		chatHistory.setText("Conversation with: " + currentTargetID + "\n");
+		
+		String[] messages = res.getData().split("\n");
+		
+		for(int i = 0; i < messages.length; i++) {
+			chatHistory.append(messages[i]);
+			chatHistory.append("\n");
+		}
+		
 	}
 	
 	public void sendMessage(String content) {
@@ -147,21 +165,23 @@ public class ChatOverlayView extends JPanel{
 			return;
 		}
 		
-		chatHistory.append("You: " + content + "\n");
+		chatHistory.append(mainGUI.getCurrentUser() + ": " + content + "\n");
+		
+		
+		/*
 		
 		//just dummy response to format of texting
 		if(!currentTargetID.isEmpty()) {
 			chatHistory.append(currentTargetID + ": I recieved your message!\n");
 		}
 		
+		*/
+		
 		messageInputUI.setText("");//reset text input area
 		
 		// Darien Test (Sending Message)
-		Request req = new Request(content, "USER", "SERVER", 0, mainGUI.getCurrentUser().getUID(), -1);
-		mainGUI.getNetworkClient().sendRequest(req);
-		//
-		
-
+		Request req = new Request(content + "," + currentTargetID, "USER", "USER", 0, mainGUI.getCurrentUser().getUID(), -1);
+		Request res = mainGUI.getNetworkClient().sendRequest(req);
 		
 	}
 	
@@ -178,6 +198,8 @@ public class ChatOverlayView extends JPanel{
 		chatHistory.setText("Select a user to start chatting with: \n");
 		currentTargetID = "";
 		contactsModel.clear();
+	public void setITButton() {
+		ITPanelButton.setEnabled(true);
 	}
 	
 	public void clickLogout() {
@@ -194,8 +216,5 @@ public class ChatOverlayView extends JPanel{
 		}else {
 			JOptionPane.showMessageDialog(this, "An unknown exception has occurred when attempting to log out... Please contact your admin.", "Logout Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		
 	}
-	
 }

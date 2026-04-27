@@ -140,27 +140,48 @@ public class ITControlPanelView extends JPanel{
 			 * logUI.setText("Authentication Logs \n");
 			 */
         	
+        	String[] messages = res.getData().split("\n");
+    		
+    		for(int i = 0; i < messages.length; i++) {
+    			logUI.append(messages[i]);
+    			logUI.append("\n");
+    		}
+        	
         });
         
         //shows a list of existing users
         searchBtn.addActionListener(e -> {
         	
-    		Request req = new Request("", "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
-    		mainGUI.getNetworkClient().sendRequest(req);
-        	
-            searchResultsModel.clear();
-            userChatsModel.clear();
-            searchResultsModel.addElement("Victor");
-            searchResultsModel.addElement("Clarize");
-            searchResultsModel.addElement("Darien");
+        	Request req = new Request(searchUI.getText(), "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
+    		Request res = mainGUI.getNetworkClient().sendRequest(req);
+    		
+    		String[] returnedQuery = res.getData().split(",");
+    		
+    		searchResultsModel.clear();
+    		
+    		for(int i = 0; i < returnedQuery.length; i++) {
+    			searchResultsModel.addElement(returnedQuery[i]);
+    		}
         });
         
         //shows active contacts and group conversations from the selected user
         searchResultsList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && searchResultsList.getSelectedValue() != null) {
+
                 userChatsModel.clear();
-                userChatsModel.addElement("Group 7 Chat");
-                userChatsModel.addElement("General chat room");
+                
+                
+                
+                Request req = new Request("Fetching Contacts", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
+        		Request res = mainGUI.getNetworkClient().sendRequest(req);
+        		
+        		String[] listOfContacts = res.getData().split(",");
+        		
+        		for(int i = 0; i < listOfContacts.length; i++) {
+        			userChatsModel.addElement(listOfContacts[i]);
+        		}
+                
+               
             }
         });
         
