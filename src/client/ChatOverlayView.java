@@ -83,6 +83,15 @@ public class ChatOverlayView extends JPanel{
 		createGroupButton.addActionListener(e -> {
 			mainGUI.switchView(VIEWSTATE.GROUPCREATION);
 		});
+		
+		//possible solution loading contacts automatically
+		Timer autoRefreshTimer = new Timer(10000, e -> {
+			//check if user is logged in
+			if(mainGUI.getCurrentUser() !=null) {
+				loadContacts();
+			}
+		});
+		autoRefreshTimer.start();
 	}
 	
 
@@ -90,17 +99,37 @@ public class ChatOverlayView extends JPanel{
 	//Methods
 	//clears our previous state of contacts and updates it with our newer ones
 	public void loadContacts() {
+		//new
+		String currentlySelected = contactsList.getSelectedValue();
 		
 		contactsModel.clear();
 		
 		Request req = new Request("Fetching Contacts", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
 		Request res = mainGUI.getNetworkClient().sendRequest(req);
 		
-		String[] listOfContacts = res.getData().split(",");
-		
-		for(int i = 0; i < listOfContacts.length; i++) {
-			contactsModel.addElement(listOfContacts[i]);
+		//check if response was sent
+		if(res != null && res.getData() != null) {
+			String[] listOfContacts = res.getData().split(",");
+			
+			for(int i =0; i < listOfContacts.length;i++) {
+				//avoid empty strings from showing up as blank contacts
+				if(!listOfContacts[i].trim().isEmpty()) {
+					contactsModel.addElement(listOfContacts[i]);
+				}
+			}
 		}
+		
+		//prevents werid UI issue
+		if(currentlySelected != null && contactsModel.contains(currentlySelected)) {
+			contactsList.setSelectedValue(currentlySelected, true);
+		}
+		
+		/*
+		 * String[] listOfContacts = res.getData().split(",");
+		 * 
+		 * for(int i = 0; i < listOfContacts.length; i++) {
+		 * contactsModel.addElement(listOfContacts[i]); }
+		 */
 		
 	}
 	
@@ -142,6 +171,15 @@ public class ChatOverlayView extends JPanel{
 		
 	}
 	
+	
+	//method to wipe chat history and contacts
+	//helpful for when a current user logs out and a different user logs in
+	public void clearChatState() {
+		chatHistory.setText("Select a user to start chatting with: \n");
+		currentTargetID = "";
+		contactsModel.clear();
+	}
+	
 	public void clickLogout() {
 		
 		// test request, but should dynamically make one based on the user's actual id.
@@ -150,6 +188,8 @@ public class ChatOverlayView extends JPanel{
 		
 		if(decision != null && decision.getType() == REQUESTTYPE.SUCCESS) {
 			mainGUI.getNetworkClient().disconnect();
+			
+			clearChatState(); //reset our chatoverlaypanel for the next user
 			mainGUI.switchView(VIEWSTATE.LOGIN);
 		}else {
 			JOptionPane.showMessageDialog(this, "An unknown exception has occurred when attempting to log out... Please contact your admin.", "Logout Error", JOptionPane.ERROR_MESSAGE);
