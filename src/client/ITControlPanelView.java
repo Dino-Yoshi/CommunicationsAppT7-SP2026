@@ -113,9 +113,32 @@ public class ITControlPanelView extends JPanel{
         //area to see authentication logs, such as
         //any type of logins, new added user, etc...
         fetchAuthenticationButton.addActionListener(e ->{
-    		Request req = new Request("", "USER", "SERVER", 5, mainGUI.getCurrentUser().getUID(), -1);
-    		Request res = mainGUI.getNetworkClient().sendRequest(req);
-        	logUI.setText("Authentication Logs \n");
+        	
+        	//build our request to fetch logs
+        	Request req = new Request("Fetch Logs", "IT", "SERVER", 5, mainGUI.getCurrentUser().getUID(),-1);
+        	
+        	Request response = mainGUI.getNetworkClient().sendRequest(req);
+        	
+        	//check for response from server
+        	if(response != null) {
+        		logUI.setText("--- Server Authentication & System Logs --- \n");
+        		
+        		logUI.append(response.getData());
+        		
+        		logUI.setCaretPosition(logUI.getDocument().getLength());
+        	}
+        	else {//if no response was sent
+        		JOptionPane.showMessageDialog(this,"Failed to fetch logs", "Permission Error", JOptionPane.ERROR_MESSAGE);
+        		logUI.setText("Error: Could not retrive logs.");
+        	}
+        	
+			/*old implementation, keeping it here just incase if anything breaks
+			 *  Request req = new
+			 * Request("","IT","SERVER",5,mainGUI.getCurrentUser().getUID(),-1); //Request
+			 * req = new Request("", "USER", "SERVER", 5, mainGUI.getCurrentUser().getUID(),
+			 * -1); mainGUI.getNetworkClient().sendRequest(req);
+			 * logUI.setText("Authentication Logs \n");
+			 */
         	
         	String[] messages = res.getData().split("\n");
     		
@@ -191,7 +214,9 @@ public class ITControlPanelView extends JPanel{
         newPassUI.setText("");
         
         String msg = newUserName + "," + newPassword;
-		Request req = new Request(msg, "USER", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
+        //new
+        Request req = new Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
+		//Request req = new Request(msg, "USER", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
 		mainGUI.getNetworkClient().sendRequest(req);
         
 		/* layout of how it will generally go
