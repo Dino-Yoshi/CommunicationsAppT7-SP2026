@@ -105,7 +105,7 @@ public class ClientNetwork {
 	}
 	
 	
-	public int sendRequest(Request req) {
+	public Request sendRequest(Request req) {
 		if(status == CLIENTSTATUS.CONNECTED) {
 			
 			Request inbound;
@@ -125,9 +125,9 @@ public class ClientNetwork {
 							disconnect();
 							setStatus(1);
 							System.out.println("Data: " + inbound.getData());
-							return 0; // log the user out.
+							return inbound; // log the user out.
 						}else {
-							return -1; // some sort of error occurred, can't log them out!
+							return null; // some sort of error occurred, can't log them out!
 						}
 
 					case SENDMESSAGE:
@@ -138,9 +138,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0;
+							return inbound;
 						}else {
-							return -1; // send message failed: either the recipient doesn't exist (more likely), or the sender is not logged in.
+							return null; // send message failed: either the recipient doesn't exist (more likely), or the sender is not logged in.
 						}
 						
 					case REGISTRATION:							// handles registration requests
@@ -151,9 +151,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // registration failed: either user attempts to register, or registration failed (more likely)
+							return null; // registration failed: either user attempts to register, or registration failed (more likely)
 						}
 		            	
 		            case SEARCH: 							// handles user search requests
@@ -164,9 +164,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // search failed: user is not logged in. (unlikely) a better error message is when users aren't found.
+							return null; // search failed: user is not logged in. (unlikely) a better error message is when users aren't found.
 						}
 		                
 		            case VIEWCONTACTS: 						// handles view contacts requests
@@ -177,9 +177,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // search failed: user is unknown/not found
+							return null; // search failed: user is unknown/not found
 						}
 		            	
 		            case ADDCONTACT: 						// handles add contact requests
@@ -190,9 +190,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // addcontact failed: user being added is not known, dosen't exist, or the action fails. most likely: user doesn't exist.
+							return null; // addcontact failed: user being added is not known, dosen't exist, or the action fails. most likely: user doesn't exist.
 						}
 		                
 		            case REMOVECONTACT: 					// handles remove contact requests
@@ -203,9 +203,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // remove contact failed: user is unknown/not found, or the action fails. more likely: user not found.
+							return null; // remove contact failed: user is unknown/not found, or the action fails. more likely: user not found.
 						}
 		                
 		            case LOADCHATHISTORY: 					// handles chat history requests
@@ -216,9 +216,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // doChatLog/LoadChatLog failed: user is unknown/not found
+							return null; // doChatLog/LoadChatLog failed: user is unknown/not found
 						}
 		                
 		            case READLOG: 							// handles read log requests
@@ -229,9 +229,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // doReadLog failed: if user is not an ITUser
+							return null; // doReadLog failed: if user is not an ITUser
 						}
 		                
 		            case CREATEGROUP:						// handles create group requests
@@ -242,9 +242,9 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
-							return 0; 
+							return inbound; 
 						}else {
-							return -1; // doCreateGroup failed: user not logged in; member doesn't exist (more likely); or group fails. 
+							return null; // doCreateGroup failed: user not logged in; member doesn't exist (more likely); or group fails. 
 						}
 		                
 		                
@@ -256,18 +256,18 @@ public class ClientNetwork {
 
 				}catch(IOException e) {
 					e.printStackTrace();
-					return -4;
+					return null;
 				}catch(ClassNotFoundException e) {
 					e.printStackTrace();
-					return -5;
+					return null;
 				}
 			}else {
 				System.err.println("Ignoring Login Request. (500)");
 			}
 	
-			return 0;
+			return null;
 		}else {
-			return -1; // No connection to the server. 
+			return null; // No connection to the server. 
 		}
 	}
 	
