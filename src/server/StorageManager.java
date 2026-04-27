@@ -75,11 +75,19 @@ public class StorageManager {
         if (message == null) {	// checks if message exists
         	return;
         }	// end missing message check
-    	
-        String filePath = buildConversationPath(message.getSenderID(), message.getRecipientID(), auth);			// computes the conversation file path
         
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) { 						// opens the conversation file in append mode
-            writer.write(message.getSenderID() + "->" + message.getRecipientID() + ": " + message.getData());	// writes the message in a readable sender to recipient format
+        String data = message.getData();
+    	String safeData = data == null ? "" : data;	// converts null data to empty text
+        String[] parts = safeData.split(",", 2); 	// splits data into two parts at the first comma
+        String first = parts.length > 0 ? parts[0].trim() : "";		// reads the first parsed value
+        String second = parts.length > 1 ? parts[1].trim() : ""; 	// reads the second parsed value
+        String[] res = new String[] { first, second };						// returns the two parsed values
+    	
+        String filePath = buildConversationPath(message.getSenderID(), auth.getIdByUsername(res[1]), auth);			// computes the conversation file path
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {// opens the conversation file in append mode
+        	
+            writer.write(message.getSenderID() + "->" + auth.getIdByUsername(res[1]) + ": " + res[0]);	// writes the message in a readable sender to recipient format
             writer.newLine();		// inserts a newline so each message stays on its own line
         } catch (IOException e) {	// catches file writing errors
             System.out.println("Failed to save message: " + e.getMessage());	// prints the error to the console
