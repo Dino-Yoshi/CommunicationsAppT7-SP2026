@@ -117,9 +117,17 @@ public class LoginView extends JPanel{
 			 System.out.println("Successful login by: "+ username);
 			 
 			 // new user to set id
+			 //handles the login if an admin were to login in, just to view admin panel
+			 if(username.equals("admin")) {
+				 ITUser adminUser = new ITUser(username, password);
+				 adminUser.setUID(user.getUID());
+				 mainGUI.setCurrentUser(adminUser);
+				 mainGUI.switchView(VIEWSTATE.ITPANEL);
+			 }else {
+				 mainGUI.setCurrentUser(user);
+				 mainGUI.switchView(VIEWSTATE.MENU);
+			 }
 			 
-			 mainGUI.setCurrentUser(user);
-			 mainGUI.switchView(VIEWSTATE.MENU);
 			 clearFields();
 			 
 		 }else if(success == -3) {
