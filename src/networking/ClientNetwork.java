@@ -130,7 +130,7 @@ public class ClientNetwork {
 							return null; // some sort of error occurred, can't log them out!
 						}
 
-					case SENDMESSAGE:							// TODO
+					case SENDMESSAGE:							// DONE
 						
 						sendResponse(req);
 						
@@ -156,7 +156,7 @@ public class ClientNetwork {
 							return null; // registration failed: either user attempts to register, or registration failed (more likely)
 						}
 		            	
-		            case SEARCH: 							// handles user search requests
+		            case SEARCH: 							// handles user search requests DONE
 		                
 						sendResponse(req);
 						
@@ -169,7 +169,7 @@ public class ClientNetwork {
 							return null; // search failed: user is not logged in. (unlikely) a better error message is when users aren't found.
 						}
 		                
-		            case VIEWCONTACTS: 						// handles view contacts requests
+		            case VIEWCONTACTS: 						// handles view contacts requests DONE
 		                
 						sendResponse(req);
 						
@@ -195,7 +195,7 @@ public class ClientNetwork {
 							return null; // addcontact failed: user being added is not known, dosen't exist, or the action fails. most likely: user doesn't exist.
 						}
 		                
-		            case REMOVECONTACT: 					// handles remove contact requests TODO: No GUI window to accomplish this. Could scrap this.
+		            case REMOVECONTACT: 					// handles remove contact requests TODO: No GUI pane to accomplish this. Could scrap this for time.
 		                
 						sendResponse(req);
 						
@@ -208,7 +208,7 @@ public class ClientNetwork {
 							return null; // remove contact failed: user is unknown/not found, or the action fails. more likely: user not found.
 						}
 		                
-		            case LOADCHATHISTORY: 					// handles chat history requests
+		            case LOADCHATHISTORY: 					// handles chat history requests // DONE
 		                
 						sendResponse(req);
 						
@@ -235,7 +235,7 @@ public class ClientNetwork {
 							return null; // doReadLog failed: if user is not an ITUser
 						}
 		                
-		            case CREATEGROUP:						// handles create group requests
+		            case CREATEGROUP:						// handles create group requests // DONE
 		            	
 						sendResponse(req);
 						
