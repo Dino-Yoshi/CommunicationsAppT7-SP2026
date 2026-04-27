@@ -16,6 +16,7 @@ public class ChatOverlayView extends JPanel{
 	private DefaultListModel<String> contactsModel;
 	private JList<String> contactsList;
 	private JTextArea chatHistory;
+	private JButton ITPanelButton;
 	private JTextField messageInputUI;
 	
 //constructor
@@ -36,10 +37,14 @@ public class ChatOverlayView extends JPanel{
 		//set up our navigation buttons: create group and logout
 		JPanel navButtons = new JPanel(new GridLayout(2,1,5,5));
 		JButton createGroupButton = new JButton("Create Group");
+		ITPanelButton = new JButton("IT Panel");
 		JButton refreshButton = new JButton("Refresh");
 		JButton logoutButton = new JButton("Logout");
 		
+		ITPanelButton.setEnabled(false); // disabled by default.
+		
 		navButtons.add(refreshButton);
+		navButtons.add(ITPanelButton);
 		navButtons.add(createGroupButton);
 		navButtons.add(logoutButton);
 		contactsPanel.add(navButtons, BorderLayout.SOUTH); //adds to bottom of our contacts panel
@@ -71,6 +76,10 @@ public class ChatOverlayView extends JPanel{
 		//our action Listners
 		refreshButton.addActionListener(e ->{ loadContacts(); openConversation(currentTargetID); });
 		sendButton.addActionListener(e-> sendMessage(messageInputUI.getText()));
+		
+		
+		
+		ITPanelButton.addActionListener(e -> {mainGUI.switchView(VIEWSTATE.ITPANEL);});
 		messageInputUI.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		contactsList.addListSelectionListener(e->{
 			
@@ -151,6 +160,10 @@ public class ChatOverlayView extends JPanel{
 	public void addNewGroup(String groupName) {
 		contactsModel.addElement("[Group] " + groupName);
 		
+	}
+	
+	public void setITButton() {
+		ITPanelButton.setEnabled(true);
 	}
 	
 	public void clickLogout() {
