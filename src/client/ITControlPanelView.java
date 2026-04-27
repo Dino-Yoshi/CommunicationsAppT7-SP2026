@@ -19,7 +19,7 @@ public class ITControlPanelView extends JPanel{
 	private DefaultListModel<String> userChatsModel;
 	private JList<String> userChatsList;
 	
-//constructor
+	//constructor
 	public ITControlPanelView(GUI mainGUI) {
 		this.mainGUI = mainGUI;
 		
