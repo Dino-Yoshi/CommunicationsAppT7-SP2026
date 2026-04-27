@@ -312,6 +312,7 @@ public class RequestHandler {
         boolean created = groupManager.createGroup(groupName, members);	// attempts to create the group
         
         if (created) { // checks if the group was created
+        	contactManager.addContact(creator, groupName);
             loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // saves the log
             return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, -1, request.getSenderID());	// returns success response
