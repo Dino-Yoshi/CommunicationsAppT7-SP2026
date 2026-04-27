@@ -140,13 +140,6 @@ public class ITControlPanelView extends JPanel{
 			 * logUI.setText("Authentication Logs \n");
 			 */
         	
-        	String[] messages = res.getData().split("\n");
-    		
-    		for(int i = 0; i < messages.length; i++) {
-    			logUI.append(messages[i]);
-    			logUI.append("\n");
-    		}
-        	
         });
         
         //shows a list of existing users

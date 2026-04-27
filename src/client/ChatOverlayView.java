@@ -198,6 +198,7 @@ public class ChatOverlayView extends JPanel{
 		chatHistory.setText("Select a user to start chatting with: \n");
 		currentTargetID = "";
 		contactsModel.clear();
+	}
 	public void setITButton() {
 		ITPanelButton.setEnabled(true);
 	}
