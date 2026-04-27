@@ -72,7 +72,7 @@ public class RequestHandler {
             case REMOVECONTACT: 					// handles remove contact requests
                 return doRemoveContact(request); 	// sends request to remove contact handler
                 
-            case LOADCHATHISTORY: 					// handles chat history requests
+            case LOADCHATHISTORY: 					// handles chat history requests // TODO: Please reformat this to send chat history data in a more parseable format.
                 return doChatLog(request); 			// sends request to chat history handler
                 
             case READLOG: 							// handles read log requests
@@ -168,8 +168,9 @@ public class RequestHandler {
         
         String sender = auth.getUsernameById(request.getSenderID());		// resolves the sender username
         
-        String[] incomingData = parseTwoValues(request.getData());
-        int recip = auth.getIdByUsername(incomingData[1]);
+        String[] incomingData = parseTwoValues(request.getData()); // separate the content from the target
+        int recip = auth.getIdByUsername(incomingData[1]); // resolve the name to an id, then back to a username.
+        
         String recipient = auth.getUsernameById(recip); // resolves the recipient username
         
         if (recipient == null) {	// checks if the recipient id is unknown
@@ -181,12 +182,12 @@ public class RequestHandler {
         storageManager.saveMessage(request, auth);	// saves the direct message to chat history
         
         if (!connectionManager.isConnected(recipient)) {	// checks if the recipient is not currently connected
-            storageManager.storeOfflineMessage(request.getRecipientID(), request);	// stores the message for offline delivery
+            storageManager.storeOfflineMessage(auth.getIdByUsername(recipient), request);	// stores the message for offline delivery
         }	// end offline recipient check
         
         loggingManager.addStructuredLog(LogType.PRIVATE_MESSAGE, sender, recipient, incomingData[0]);	// logs the private message
         loggingManager.saveLogs(); // saves the log
-        return createResponse("SUCCESS: message processed", Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns message success response
+        return createResponse("SUCCESS: message processed", Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(recipient), request.getSenderID());	// returns message success response
     }
 
     // handles group message requests
@@ -274,7 +275,7 @@ public class RequestHandler {
         if (!senderIsLoggedIn(request)) {	// checks if the sender is not logged in
             return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	// returns login required response
         }	// end logged in check
-        List<String> history = storageManager.loadChatHistory(request.getSenderID(), request.getRecipientID(), auth);	// loads chat history from storage
+        List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	// loads chat history from storage
         return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
     }
 
@@ -316,7 +317,7 @@ public class RequestHandler {
         boolean created = groupManager.createGroup(groupName, members);	// attempts to create the group
         
         if (created) { // checks if the group was created
-        	if(!auth.registerGroup(groupName)) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
+        	if(!auth.registerGroup(groupName) && members.size() != 2) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
         	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
             loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // saves the log
