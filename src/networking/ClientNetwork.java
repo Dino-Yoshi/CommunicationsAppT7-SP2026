@@ -130,7 +130,7 @@ public class ClientNetwork {
 							return null; // some sort of error occurred, can't log them out!
 						}
 
-					case SENDMESSAGE:
+					case SENDMESSAGE:							// TODO
 						
 						sendResponse(req);
 						
@@ -143,7 +143,7 @@ public class ClientNetwork {
 							return null; // send message failed: either the recipient doesn't exist (more likely), or the sender is not logged in.
 						}
 						
-					case REGISTRATION:							// handles registration requests
+					case REGISTRATION:							// handles registration requests TODO
 		                
 						sendResponse(req);
 						
@@ -182,7 +182,7 @@ public class ClientNetwork {
 							return null; // search failed: user is unknown/not found
 						}
 		            	
-		            case ADDCONTACT: 						// handles add contact requests
+		            case ADDCONTACT: 						// handles add contact requests TODO: Redundant; Group Creation already accomplishes this task.
 		                
 						sendResponse(req);
 						
@@ -195,7 +195,7 @@ public class ClientNetwork {
 							return null; // addcontact failed: user being added is not known, dosen't exist, or the action fails. most likely: user doesn't exist.
 						}
 		                
-		            case REMOVECONTACT: 					// handles remove contact requests
+		            case REMOVECONTACT: 					// handles remove contact requests TODO: No GUI window to accomplish this. Could scrap this.
 		                
 						sendResponse(req);
 						
@@ -221,7 +221,7 @@ public class ClientNetwork {
 							return null; // doChatLog/LoadChatLog failed: user is unknown/not found
 						}
 		                
-		            case READLOG: 							// handles read log requests
+		            case READLOG: 							// handles read log requests TODO: 
 		                
 						sendResponse(req);
 						
