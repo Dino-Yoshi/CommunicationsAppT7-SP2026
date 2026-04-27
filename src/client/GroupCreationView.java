@@ -89,13 +89,17 @@ public class GroupCreationView extends JPanel{
         //sets up our Active listeners
         searchButton.addActionListener(e -> {
         	
-    		Request req = new Request("", "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
-    		mainGUI.getNetworkClient().sendRequest(req);
         	
-            searchResultsModel.clear();
-            searchResultsModel.addElement("Victor");
-            searchResultsModel.addElement("Clarize");
-            searchResultsModel.addElement("Darien");
+    		Request req = new Request(searchUI.getText(), "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
+    		Request res = mainGUI.getNetworkClient().sendRequest(req);
+    		
+    		String[] returnedQuery = res.getData().split(",");
+    		
+    		searchResultsModel.clear();
+    		
+    		for(int i = 0; i < returnedQuery.length; i++) {
+    			searchResultsModel.addElement(returnedQuery[i]);
+    		}
         });
         
         //moves selected user from contacting list to wanted for group
