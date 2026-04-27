@@ -10,15 +10,16 @@ public class User {
 	protected boolean IT;
 	private USERSTATUS status;
 	
-	private enum USERSTATUS {ONLINE, AWAY, DND, OFFLINE, NULL};
+	public enum USERSTATUS {ONLINE, AWAY, DND, OFFLINE, NULL};
 	
 	// constructor
 	
-	User(String u, String p){
+	public User(String u, String p){
 		username = u;
 		password = p;
 		IT = false;
 		status = USERSTATUS.ONLINE;
+		UID = -1;
 	}
 	
 	// methods
@@ -28,7 +29,7 @@ public class User {
 	}
 	
 	// getters
-
+	
 	public int getUID() {
 		return UID;
 	}
@@ -50,9 +51,9 @@ public class User {
 	}
 	
 	// setters
-
-	public void setUID(int uID) {
-		UID = uID;
+	
+	public void setUID(int c) {
+		this.UID = c;
 	}
 
 	public void setUsername(String username) {
