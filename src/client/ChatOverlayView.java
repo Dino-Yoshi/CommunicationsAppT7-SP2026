@@ -69,7 +69,7 @@ public class ChatOverlayView extends JPanel{
 		add(splitPane, BorderLayout.CENTER);
 		
 		//our action Listners
-		refreshButton.addActionListener(e ->{ loadContacts(); openConversation(contactsList.getSelectedValue()); });
+		refreshButton.addActionListener(e ->{ loadContacts(); openConversation(currentTargetID); });
 		sendButton.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		messageInputUI.addActionListener(e-> sendMessage(messageInputUI.getText()));
 		contactsList.addListSelectionListener(e->{
@@ -127,7 +127,7 @@ public class ChatOverlayView extends JPanel{
 			return;
 		}
 		
-		chatHistory.append("You: " + content + "\n");
+		chatHistory.append(mainGUI.getCurrentUser() + ": " + content + "\n");
 		
 		
 		/*
