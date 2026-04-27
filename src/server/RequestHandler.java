@@ -167,7 +167,10 @@ public class RequestHandler {
         }	// end group message check
         
         String sender = auth.getUsernameById(request.getSenderID());		// resolves the sender username
-        String recipient = auth.getUsernameById(request.getRecipientID()); 	// resolves the recipient username
+        
+        String[] incomingData = parseTwoValues(request.getData());
+        int recip = auth.getIdByUsername(incomingData[1]);
+        String recipient = auth.getUsernameById(recip); // resolves the recipient username
         
         if (recipient == null) {	// checks if the recipient id is unknown
             loggingManager.addStructuredLog(LogType.SYSTEM_ERROR, String.valueOf(request.getSenderID()), String.valueOf(request.getRecipientID()), "unknown direct message recipient");	// logs unknown recipient
@@ -181,7 +184,7 @@ public class RequestHandler {
             storageManager.storeOfflineMessage(request.getRecipientID(), request);	// stores the message for offline delivery
         }	// end offline recipient check
         
-        loggingManager.addStructuredLog(LogType.PRIVATE_MESSAGE, sender, recipient, request.getData());	// logs the private message
+        loggingManager.addStructuredLog(LogType.PRIVATE_MESSAGE, sender, recipient, incomingData[0]);	// logs the private message
         loggingManager.saveLogs(); // saves the log
         return createResponse("SUCCESS: message processed", Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns message success response
     }
@@ -244,7 +247,7 @@ public class RequestHandler {
         boolean added = contactManager.addContact(owner, contact);	// attempts to add the contact
         
         if (added) {	// checks if the contact was added
-            return createResponse("SUCCESS: contact added", Request.REQUESTTYPE.SUCCESS, -1, request.getSenderID());	// returns success response
+            return createResponse("SUCCESS: contact added", Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(contact), request.getSenderID());	// returns success response
         }	// end added check
         return createResponse("ERROR: contact was not added", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
     }
@@ -298,6 +301,7 @@ public class RequestHandler {
         String[] groupData = parseTwoValues(request.getData());	// parses group name and member list from request data
         String groupName = groupData[0];				// stores the group name
         List<String> members = parseList(groupData[1]); // parses selected members
+
         String creator = auth.getUsernameById(request.getSenderID());	// resolves the creator username
         
         if (creator != null && !members.contains(creator)) {	// checks if the creator is not already included
@@ -312,10 +316,11 @@ public class RequestHandler {
         boolean created = groupManager.createGroup(groupName, members);	// attempts to create the group
         
         if (created) { // checks if the group was created
-        	contactManager.addContact(creator, groupName);
+        	if(!auth.registerGroup(groupName)) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
+        	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
             loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // saves the log
-            return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, -1, request.getSenderID());	// returns success response
+            return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());	// returns success response
         }	// end group creation success check
         return createResponse("ERROR: group was not created", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
     }
