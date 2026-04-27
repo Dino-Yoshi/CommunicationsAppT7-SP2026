@@ -216,6 +216,7 @@ public class ClientNetwork {
 						
 						if(inbound.getType() == REQUESTTYPE.SUCCESS){
 							System.out.println("Data: " + inbound.getData());
+							System.out.println("Type: " + inbound.getType());
 							return inbound; 
 						}else {
 							return null; // doChatLog/LoadChatLog failed: user is unknown/not found
