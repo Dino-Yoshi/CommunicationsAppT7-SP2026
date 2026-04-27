@@ -14,6 +14,7 @@ public class UserAuthenticator {
 
 	// ATTRIBUTES
     private Map<String, String> userCredentials;	// maps usernames to passwords
+    private Map<String, String> ITUserCredentials;  // maps IT combinations
     private Map<Integer, String> idToUsername; 		// maps numeric ids to usernames
     private Map<String, Integer> usernameToId; 		// maps usernames to numeric ids
     private Set<String> activeSessions; 			// stores usernames that are currently logged in
@@ -22,6 +23,7 @@ public class UserAuthenticator {
     // CONSTRUCTOR
     public UserAuthenticator() {
         this.userCredentials = new LinkedHashMap<>(); 	// creates the username to password map
+        this.ITUserCredentials = new LinkedHashMap<>(); // creates the IT combination map
         this.idToUsername = new LinkedHashMap<>(); 		// creates the id to username map
         this.usernameToId = new LinkedHashMap<>(); 		// creates the username to id map
         this.activeSessions = new HashSet<>(); 			// creates the active session set
@@ -42,6 +44,23 @@ public class UserAuthenticator {
             return false; 									// rejects authentication
         }	// end unknown-user check
         boolean valid = userCredentials.get(cleanUsername).equals(cleanPassword); // compares provided password to stored password
+        if (valid) {							// checks if the credentials matched
+            activeSessions.add(cleanUsername);	// adds the username to the active session set
+        }	// end login success check
+        return valid;	// returns authentication success or fail
+    }
+    
+    public synchronized boolean ITAuthenticate(String username, String password) {
+        String cleanUsername = normalize(username);		// trims username, rejects blank input
+        String cleanPassword = password;				// keeps password as is
+    	
+        if (cleanUsername == null || cleanPassword == null) { 	// checks for invalid null input
+            return false; 										// rejects authentication
+        }	// end missing-input check
+        if (!ITUserCredentials.containsKey(cleanUsername)) { 	// checks if username exists
+            return false; 									// rejects authentication
+        }	// end unknown-user check
+        boolean valid = ITUserCredentials.get(cleanUsername).equals(cleanPassword); // compares provided password to stored password
         if (valid) {							// checks if the credentials matched
             activeSessions.add(cleanUsername);	// adds the username to the active session set
         }	// end login success check
@@ -99,6 +118,11 @@ public class UserAuthenticator {
         String cleanUsername = normalize(username);	// cleans username
         return cleanUsername != null && activeSessions.contains(cleanUsername);	// returns true if username is logged in
     }
+    // check if username is inside the IT map.
+    public synchronized boolean isIT(String username) {
+        String cleanUsername = normalize(username);	// cleans username
+        return cleanUsername != null && ITUserCredentials.containsKey(cleanUsername);	// returns true if username is logged in
+    }
 
     // returns the username associated with a numeric id
     public synchronized String getUsernameById(int id) {
@@ -128,6 +152,24 @@ public class UserAuthenticator {
             String password = entry.getValue();				// gets the password from the current entry
             if (username != null && password != null && !userCredentials.containsKey(username)) {	// checks that the saved user is valid and not duplicated
                 userCredentials.put(username, password);	// stores the credential pair
+                usernameToId.put(username, nextUserId); 	// assigns an id to the username
+                idToUsername.put(nextUserId, username); 	// maps that numeric id back to the username
+                nextUserId++;	// increments the id counter for the next user
+            }	// end valid user check
+        }	// end loop
+    }
+    
+    public synchronized void loadITUsers(Map<String, String> users) {
+        ITUserCredentials.clear();	// clears any existing credential data for ITUsers
+        
+        if (users == null) { 		// checks if there are users to load
+        	return;					// stops loading if none
+        }	// end null check
+        for (Map.Entry<String, String> entry : users.entrySet()) { // start loop through each user entry
+            String username = normalize(entry.getKey()); 	// trims and gets the username from the current entry
+            String password = entry.getValue();				// gets the password from the current entry
+            if (username != null && password != null && !ITUserCredentials.containsKey(username)) {	// checks that the saved user is valid and not duplicated
+            	ITUserCredentials.put(username, password);	// stores the credential pair
                 usernameToId.put(username, nextUserId); 	// assigns an id to the username
                 idToUsername.put(nextUserId, username); 	// maps that numeric id back to the username
                 nextUserId++;	// increments the id counter for the next user
