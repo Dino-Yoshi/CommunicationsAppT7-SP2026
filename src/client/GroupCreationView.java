@@ -160,8 +160,10 @@ public class GroupCreationView extends JPanel{
 		// Darien Test (Searching)
     	String msg = groupName + "," + membersList;
 		Request req = new Request(msg, "USER", "SERVER", 6, mainGUI.getCurrentUser().getUID(), -1);
-		mainGUI.getNetworkClient().sendRequest(req);
-		//
+		Request res = mainGUI.getNetworkClient().sendRequest(req);
+		
+		
+		
     	
     	JOptionPane.showMessageDialog(this, "Group: "+groupName + " created successfully with members: "  + membersList);
     	
