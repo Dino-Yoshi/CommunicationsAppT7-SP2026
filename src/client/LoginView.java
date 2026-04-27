@@ -121,6 +121,8 @@ public class LoginView extends JPanel{
 				 mainGUI.getChatOverlayView().setITButton();
 			 }
 			 
+			 mainGUI.setCurrentUser(user);
+			 mainGUI.switchView(VIEWSTATE.MENU);
 			 clearFields();
 			 
 		 }else {
