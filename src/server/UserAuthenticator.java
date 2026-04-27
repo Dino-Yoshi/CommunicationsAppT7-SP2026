@@ -65,6 +65,19 @@ public class UserAuthenticator {
         nextUserId++;	// increments the id counter for the next new user
         return true;	// returns success
     }
+    
+    synchronized boolean registerGroup(String groupName) {
+    	
+    	if(getIdByUsername(groupName) != null) {
+    		return false; // this group chat already exists.
+    	}
+    	
+        usernameToId.put(groupName, nextUserId);		// maps the username to the next available id
+        idToUsername.put(nextUserId, groupName);		// maps the new id back to the username
+        nextUserId++;
+    	
+    	return true;
+    }
 
     // removes a user from the active session set
     public synchronized void logout(String username) {
@@ -99,8 +112,6 @@ public class UserAuthenticator {
     }
 
     
-    // TODO: how will the client know what id they are on logout? Because the logout checks by id to username. This is a problem if the user ids don't match exactly, as it
-    // prevents logout. 
     // loads persisted username and password data
     public synchronized void loadUsers(Map<String, String> users) {
         userCredentials.clear();	// clears any existing credential data
