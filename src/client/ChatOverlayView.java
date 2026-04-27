@@ -165,7 +165,7 @@ public class ChatOverlayView extends JPanel{
 			return;
 		}
 		
-		chatHistory.append(mainGUI.getCurrentUser() + ": " + content + "\n");
+		chatHistory.append(mainGUI.getCurrentUser().getUsername() + ": " + content + "\n");
 		
 		
 		/*
