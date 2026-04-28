@@ -7,3 +7,5 @@ Victor,2
 Clarize,3
 yourabot,letmein
 Wumbo01,uranium
+eclypse,albinauric
+xerp,derp
