@@ -110,7 +110,7 @@ public class UserAuthenticator {
     // checks if a username already exists
     public synchronized boolean userExists(String username) {
         String cleanUsername = normalize(username);	// cleans username
-        return cleanUsername != null && userCredentials.containsKey(cleanUsername);	// returns true if username exists
+        return cleanUsername != null && (userCredentials.containsKey(cleanUsername) || ITUserCredentials.containsKey(cleanUsername));	// returns true if username exists 
     }
 
     // checks if a username is currently logged in
