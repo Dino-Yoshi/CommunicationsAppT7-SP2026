@@ -222,7 +222,7 @@ public class ClientNetwork {
 							return null; // doChatLog/LoadChatLog failed: user is unknown/not found
 						}
 		                
-		            case READLOG: 							// handles read log requests TODO: 
+		            case READLOG: 							// handles read log requests // DONE 
 		                
 						sendResponse(req);
 						
