@@ -101,6 +101,49 @@ public class ContactManager {
         }	// ends missing contacts check
         return contactsByUser.get(cleanOwner).contains(cleanContact);	// returns if the contact is in the owner's contact list
     }
+   
+    // ***** NEW: returns a full copy of all contact lists so storage can persist them
+    public synchronized Map<String, List<String>> exportContacts() {
+        Map<String, List<String>> copy = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Set<String>> entry : contactsByUser.entrySet()) {
+            copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+
+        return copy;
+    }
+
+    // ***** NEW: reloads all contact lists from saved storage after a server boot
+    public synchronized void importContacts(Map<String, List<String>> savedContacts) {
+        contactsByUser.clear();
+
+        if (savedContacts == null) {
+            return;
+        }
+
+        for (Map.Entry<String, List<String>> entry : savedContacts.entrySet()) {
+            String owner = normalize(entry.getKey());
+
+            if (owner == null) {
+                continue; 
+            }
+
+            contactsByUser.putIfAbsent(owner, new LinkedHashSet<>());
+
+            if (entry.getValue() == null) {
+                continue;
+            }
+
+            for (String contact : entry.getValue()) {
+                String cleanContact = normalize(contact);
+
+                // NEW: skips invalid or self-contact entries while restoring
+                if (cleanContact != null && !owner.equals(cleanContact)) {
+                    contactsByUser.get(owner).add(cleanContact);
+                }
+            }
+        }
+    }
     
     // cleans usernames and query text
     private String normalize(String value) {
