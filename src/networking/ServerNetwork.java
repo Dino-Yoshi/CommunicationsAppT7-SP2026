@@ -33,7 +33,7 @@ public class ServerNetwork {
 		// Create a Server Socket
         ServerSocket ss = new ServerSocket(port);
         System.out.println("ServerSocket awaiting connections...");
-        requestHandler = new RequestHandler();
+        requestHandler = RequestHandler.getInstance();	// adjusted to singleton 
         clients = new ArrayList<Socket>();
         
         setStatus(0); // Server is ONLINE
