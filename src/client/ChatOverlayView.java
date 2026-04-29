@@ -150,11 +150,15 @@ public class ChatOverlayView extends JPanel{
 		this.currentTargetID = targetChat;
 		chatHistory.setText("Conversation with: " + currentTargetID + "\n");
 		
-		String[] messages = res.getData().split("\n");
-		
-		for(int i = 0; i < messages.length; i++) {
-			chatHistory.append(messages[i]);
-			chatHistory.append("\n");
+		if(res != null) {
+			String[] messages = res.getData().split("\n");
+			
+			for(int i = 0; i < messages.length; i++) {
+				chatHistory.append(messages[i]);
+				chatHistory.append("\n");
+			}
+		}else {
+			JOptionPane.showMessageDialog(this, "Manual Refresh Failed. A chat must be selected.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
