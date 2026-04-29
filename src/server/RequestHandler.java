@@ -289,6 +289,11 @@ public class RequestHandler {
         if (!senderIsLoggedIn(request)) {	// checks if the sender is not logged in
             return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	// returns login required response
         }	// end logged in check
+        
+        if(auth.getIdByUsername(request.getData()) == null){
+        	return createResponse("ERROR: chat must be selected to refresh", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());
+        }
+        
         List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	// loads chat history from storage
         return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
     }
