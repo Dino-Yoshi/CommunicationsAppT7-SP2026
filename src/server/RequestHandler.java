@@ -1,5 +1,6 @@
 package server;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import networking.Request;
@@ -10,7 +11,7 @@ import networking.Request;
 public class RequestHandler {
 
     // ATTRIBUTES
-    private static RequestHandler instance;         // ***** NEW: singleton instance
+	private static RequestHandler instance;
     private List<Request> requestList;				// stores every request handled during this server run
     private int numRequests; 						// stores the number of requests handled during this server run
     private UserAuthenticator auth; 				// manages users, passwords, ids, and active sessions
@@ -44,10 +45,6 @@ public class RequestHandler {
         return instance;
     }
 
-    // ***** NEW: helper method for tests
-    public static synchronized void resetInstanceForTests() {
-        instance = null;
-    }
     
     // METHODS
 
@@ -276,7 +273,6 @@ public class RequestHandler {
         boolean added = contactManager.addContact(owner, contact);	// attempts to add the contact
         
         if (added) {	// checks if the contact was added
-            storageManager.saveContacts(contactManager.exportContacts()); // ***** NEW: persist contacts after add
             return createResponse("SUCCESS: contact added", Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(contact), request.getSenderID());	// returns success response
         }	// end added check
         return createResponse("ERROR: contact was not added", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
@@ -294,7 +290,6 @@ public class RequestHandler {
         boolean removed = contactManager.removeContact(owner, contact);	// attempts to remove the contact
         
         if (removed) {	// checks if the contact was removed
-            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: persist contacts after removal
             return createResponse("SUCCESS: contact removed", Request.REQUESTTYPE.SUCCESS, -1, request.getSenderID());	// returns success response
         }	// end removed check
         return createResponse("ERROR: contact was not removed", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
@@ -305,6 +300,11 @@ public class RequestHandler {
         if (!senderIsLoggedIn(request)) {	// checks if the sender is not logged in
             return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	// returns login required response
         }	// end logged in check
+        
+        if(auth.getIdByUsername(request.getData()) == null){
+        	return createResponse("ERROR: chat must be selected to refresh", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());
+        }
+        
         List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	// loads chat history from storage
         return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
     }
@@ -349,8 +349,7 @@ public class RequestHandler {
         if (created) { // checks if the group was created
         	if(!auth.registerGroup(groupName) && members.size() != 2) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
         	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
-            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: persist creator's group contact too
-        	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
+            loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // saves the log
             return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());	// returns success response
         }	// end group creation success check

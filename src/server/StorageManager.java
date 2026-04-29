@@ -32,7 +32,6 @@ public class StorageManager {
         this.userFilePath = userFilePath;					// stores the user file path
         this.messageDirectory = messageDirectory;			// stores the message directory path
         this.offlineMessages = new HashMap<>();				// creates the offline message map
-        this.contactsFilePath = contactsFilePath;			// ***** NEW: stores contacts file path
         File messageFolder = new File(messageDirectory);	// creates a File object representing the message directory
         if (!messageFolder.exists()) { 						// checks whether the message directory exists
             messageFolder.mkdirs(); 						// creates the directory path if it does not exist
@@ -97,65 +96,6 @@ public class StorageManager {
         return users;	// returns the loaded user map
     }
 
-
-    // ***** NEW: saves the full contact snapshot so contacts survive reboot
-    public synchronized void saveContacts(Map<String, List<String>> contacts) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(contactsFilePath))) {
-            if (contacts == null) {
-                return;
-            }
-
-            for (Map.Entry<String, List<String>> entry : contacts.entrySet()) {
-                String owner = entry.getKey(); // NEW
-                List<String> values = entry.getValue() == null ? new ArrayList<>() : entry.getValue();
-
-                writer.write(owner + ":" + String.join(",", values));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Failed to save contacts: " + e.getMessage());
-        }
-    }
-
-    // ***** NEW: loads all saved contacts back into memory on startup
-    public synchronized Map<String, List<String>> loadContacts() {
-        Map<String, List<String>> contacts = new LinkedHashMap<>();
-        File file = new File(contactsFilePath);
-
-        if (!file.exists()) { 
-            return contacts;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) { 
-            String line; // NEW
-
-            while ((line = reader.readLine()) != null) { 
-                String[] parts = line.split(":", 2); 
-                String owner = parts[0].trim(); 
-                List<String> values = new ArrayList<>();
-
-                if (parts.length > 1 && !parts[1].isBlank()) { 
-                    String[] contactParts = parts[1].split(","); 
-
-                    for (String contact : contactParts) { 
-                        String cleanContact = contact.trim(); 
-                        if (!cleanContact.isEmpty()) { 
-                            values.add(cleanContact); 
-                        } 
-                    } 
-                } 
-
-                if (!owner.isBlank()) { 
-                    contacts.put(owner, values); 
-                }
-            } 
-        } catch (IOException e) { 
-            System.out.println("Failed to load contacts: " + e.getMessage()); 
-        } 
-
-        return contacts; 
-    }
-    
     // saves a direct message request into a conversation file
     public synchronized void saveMessage(Request message, UserAuthenticator auth) {
         if (message == null) {	// checks if message exists
