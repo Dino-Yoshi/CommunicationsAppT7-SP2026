@@ -5,7 +5,7 @@ import java.util.List;
 import networking.Request;
 
 // CLASS DESCRIPTION:
-// receives requests and coordinates authentication, storage, logging, contacts, groups, and connections
+// receives requests and manages authentication, storage, logging, contacts, groups, and connections
 
 public class RequestHandler {
 
@@ -20,7 +20,7 @@ public class RequestHandler {
     private StorageManager storageManager; 			// manages saved users, chat history, and offline messages
     private ConnectionManager connectionManager; 	// manages connected client mappings
 
-    // CONSTRUCTOR: private to avoid multiple handlers
+    // CONSTRUCTOR: (private to avoid multiple handlers)
     private RequestHandler() {
         this.requestList = new ArrayList<>(); 	// creates the handled request list
         this.numRequests = 0; 					// starts handled request count at zero
@@ -29,9 +29,9 @@ public class RequestHandler {
         this.contactManager = new ContactManager(); 			// creates the contact manager
         this.loggingManager = new LoggingManager("server.log"); // creates the logging manager using a simple log file
         this.storageManager = new StorageManager("ITUsers.txt", "users.txt", "contacts.txt", "messages"); 	// creates the storage manager using a user file and message folder
-        this.connectionManager = new ConnectionManager(); 					// creates the connection manager
-        this.auth.loadUsers(this.storageManager.loadUsers()); 				// loads saved users into the authentication manager
-        this.auth.loadITUsers(this.storageManager.loadITUsers());			// loads saved ITUsers into the authentication manager
+        this.connectionManager = new ConnectionManager(); 						// creates the connection manager
+        this.auth.loadUsers(this.storageManager.loadUsers()); 					// loads saved users into the authentication manager
+        this.auth.loadITUsers(this.storageManager.loadITUsers());				// loads saved ITUsers into the authentication manager
         this.contactManager.importContacts(this.storageManager.loadContacts());	// ***** NEW: restores contacts after boot
 
     }
@@ -497,3 +497,5 @@ public class RequestHandler {
         return values;	// returns parsed values
     }
 }
+
+
