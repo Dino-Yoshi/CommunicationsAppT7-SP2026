@@ -198,6 +198,9 @@ public class ChatOverlayView extends JPanel{
 		chatHistory.setText("Select a user to start chatting with: \n");
 		currentTargetID = "";
 		contactsModel.clear();
+		
+		ITPanelButton.setEnabled(false);//ensures it turns off if an it were to first login when server gets first booted and then a user were to log in
+		
 	}
 	public void setITButton() {
 		ITPanelButton.setEnabled(true);
