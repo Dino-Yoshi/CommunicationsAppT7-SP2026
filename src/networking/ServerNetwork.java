@@ -153,6 +153,11 @@ public class ServerNetwork {
 
 		        	}catch(ClassNotFoundException e) {
 		        		e.printStackTrace();
+		        	}catch(EOFException e) {
+		        		System.err.println("Client was abruptly terminated! If this was intentional, this can be safely " +
+		        							"ignored.");
+		        		//e.printStackTrace();
+		        		break;
 		        	}
 
 		        }while(InboundMsg.getType() != Request.REQUESTTYPE.LOGOUT);
