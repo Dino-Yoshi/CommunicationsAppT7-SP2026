@@ -1,4 +1,4 @@
-// TODO: ServerNetwork and ClientNetwork must be built together.
+
 package networking;
 
 import java.io.EOFException;
@@ -188,7 +188,7 @@ public class ServerNetwork {
 	
 	// ServerNetwork methods
 	
-	public static int getPort() {
+	public int getPort() {
 		return port;
 	}
 

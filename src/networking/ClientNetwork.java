@@ -13,17 +13,16 @@ public class ClientNetwork {
 	private int serverPort; // Port Number of Server to access.
 	private Socket clientSocket; // Socket which Client uses to connect to a ServerSocket
 	private CLIENTSTATUS status; // Client Current Status
-	private enum CLIENTSTATUS {CONNECTED, DISCONNECTED, NULL}; // Status ENUM
+	public enum CLIENTSTATUS {CONNECTED, DISCONNECTED, NULL}; // Status ENUM
 	
 	private ObjectOutputStream objectOutputStream;
 	private ObjectInputStream objectInputStream;
-	
-	private RequestHandler requestHandler; 
+
 	private User user; 
 	
 	// constructor
 	public ClientNetwork(){
-		serverIP = "192.168.1.70"; // hard connection to 'x' server under 'x' port.
+		serverIP = "192.168.1.70"; // need to change when actually testing
 		serverPort = 7777;
 		status = CLIENTSTATUS.DISCONNECTED; // by default they are not connect until a login attempt is made. 
 	}
@@ -272,13 +271,10 @@ public class ClientNetwork {
 		}
 	}
 	
-	public Request handleRequest(Request req) {
-		return requestHandler.handleRequest(req, clientSocket);
-	}
-	
-	public void sendResponse(Request req) throws IOException{
+	public boolean sendResponse(Request req) throws IOException{
 		objectOutputStream.writeObject(req);
 		objectOutputStream.flush();
+		return true;
 	}
 	
 	// getters
