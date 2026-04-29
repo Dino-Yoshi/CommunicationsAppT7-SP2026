@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.Map;
 
 // CLASS DESCRIPTION:
-// handles user persistence, chat history persistence, and offline message storage
+// handles user persistence, chat history persistence, contact persistence, and offline message storage
 
 public class StorageManager {
 	
 	// ATTRIBUTES
     private String userFilePath;							// stores the file path where username and password pairs are saved
-    private String ITUserFilePath;
+    private String ITUserFilePath;							// stores file path for it users
     private String contactsFilePath;						// ***** NEW: stores file path for saved contacts
     private String messageDirectory;						// stores the directory where conversation files are saved
     private Map<Integer, List<Request>> offlineMessages;	// maps recipient ids to queued Request objects for offline delivery
 
-    // CONSTRUCTOR
+    // CONSTRUCTOR (4 arguments)
     public StorageManager(String ITUserFilePath, String userFilePath, String contactsFilePath, String messageDirectory) {
     	this.ITUserFilePath = ITUserFilePath;
         this.userFilePath = userFilePath;					// stores the user file path
