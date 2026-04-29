@@ -11,6 +11,7 @@ import networking.Request;
 public class RequestHandler {
 
     // ATTRIBUTES
+	private static RequestHandler instance;
     private List<Request> requestList;				// stores every request handled during this server run
     private int numRequests; 						// stores the number of requests handled during this server run
     private UserAuthenticator auth; 				// manages users, passwords, ids, and active sessions
