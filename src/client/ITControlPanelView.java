@@ -14,6 +14,7 @@ public class ITControlPanelView extends JPanel{
 	private JPasswordField newPassUI;
 	private JTextArea	logUI;
 	private JTextField searchUI;
+	private JCheckBox isITAdminCheckBox;
 	private DefaultListModel<String> searchResultsModel;
 	private JList<String> searchResultsList;
 	private DefaultListModel<String> userChatsModel;
@@ -32,12 +33,14 @@ public class ITControlPanelView extends JPanel{
 		
 		newUserUI = new JTextField(10);
 		newPassUI = new JPasswordField(10);
+		isITAdminCheckBox = new JCheckBox("Make IT Admin?");
 		JButton regiButton = new JButton("Register");
 		
 		regiPanel.add(new JLabel("username:"));
 		regiPanel.add(newUserUI);
 		regiPanel.add(new JLabel("Password:"));
 		regiPanel.add(newPassUI);
+		regiPanel.add(isITAdminCheckBox);
 		regiPanel.add(regiButton);
 		add(regiPanel, BorderLayout.NORTH);
 		
@@ -144,37 +147,38 @@ public class ITControlPanelView extends JPanel{
         
         //shows a list of existing users
         searchBtn.addActionListener(e -> {
-        	
-        	Request req = new Request(searchUI.getText(), "USER", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
-    		Request res = mainGUI.getNetworkClient().sendRequest(req);
-    		
-    		String[] returnedQuery = res.getData().split(",");
-    		
+        	Request req = new Request(searchUI.getText(), "IT", "SERVER", 2, mainGUI.getCurrentUser().getUID(), -1);
+    		Request response = mainGUI.getNetworkClient().sendRequest(req);
+            //clears old results
     		searchResultsModel.clear();
+            userChatsModel.clear();
+            
+            //chech for response
+            if (response != null && response.getData() != null && !response.getData().isEmpty()) {
+            	String[] foundUsers = response.getData().split(",");
+            	for (String u : foundUsers) {
+            		searchResultsModel.addElement(u);
+            	}
+            }
     		
-    		for(int i = 0; i < returnedQuery.length; i++) {
-    			searchResultsModel.addElement(returnedQuery[i]);
-    		}
         });
         
         //shows active contacts and group conversations from the selected user
         searchResultsList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && searchResultsList.getSelectedValue() != null) {
-
+        	if (!e.getValueIsAdjusting() && searchResultsList.getSelectedValue() != null) {
                 userChatsModel.clear();
+                String targetUser = searchResultsList.getSelectedValue();
                 
+                // Put the target user's name in the Data slot so the server knows who to look up
+                Request req = new Request(targetUser, "IT", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
+                Request response = mainGUI.getNetworkClient().sendRequest(req);
                 
-                
-                Request req = new Request("Fetching Contacts", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
-        		Request res = mainGUI.getNetworkClient().sendRequest(req);
-        		
-        		String[] listOfContacts = res.getData().split(",");
-        		
-        		for(int i = 0; i < listOfContacts.length; i++) {
-        			userChatsModel.addElement(listOfContacts[i]);
-        		}
-                
-               
+                if (response != null && response.getData() != null && !response.getData().isEmpty()) {
+                	String[] contacts = response.getData().split(",");
+                	for (String c : contacts) {
+                		userChatsModel.addElement(c);
+                	}
+                }
             }
         });
         
@@ -198,19 +202,38 @@ public class ITControlPanelView extends JPanel{
 	public void registerNewUser() {
 		String newUserName = newUserUI.getText();
 		String newPassword = new String(newPassUI.getPassword());
+		boolean isIT = isITAdminCheckBox.isSelected();
 		
-		if(newUserName.isEmpty() || newPassword.isEmpty()) return;
-		
-		//display that new registration was successful
-		JOptionPane.showMessageDialog(this, "User '" + newUserName + "' registered successfully.");
-        newUserUI.setText(""); 
-        newPassUI.setText("");
+		//check if an IT is being made
+		String role = isIT ? "IT" : "USER";
+        String msg = newUserName + "," + newPassword + "," + role;
         
-        String msg = newUserName + "," + newPassword;
-        //new
         Request req = new Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
-		//Request req = new Request(msg, "USER", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
-		mainGUI.getNetworkClient().sendRequest(req);
+		Request response = mainGUI.getNetworkClient().sendRequest(req);
+        
+		//check for response back from server
+		if (response != null && response.getType() == Request.REQUESTTYPE.SUCCESS) {
+			JOptionPane.showMessageDialog(this, "User '" + newUserName + "' registered successfully as " + role + ".");
+	        newUserUI.setText(""); 
+	        newPassUI.setText("");
+	        isITAdminCheckBox.setSelected(false);
+		} else {
+			JOptionPane.showMessageDialog(this, "Registration failed.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		/*
+		 * if(newUserName.isEmpty() || newPassword.isEmpty()) return;
+		 * 
+		 * //display that new registration was successful
+		 * JOptionPane.showMessageDialog(this, "User '" + newUserName +
+		 * "' registered successfully."); newUserUI.setText(""); newPassUI.setText("");
+		 * 
+		 * String msg = newUserName + "," + newPassword; //new Request req = new
+		 * Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
+		 * //Request req = new Request(msg, "USER", "SERVER", 1,
+		 * mainGUI.getCurrentUser().getUID(), -1);
+		 * mainGUI.getNetworkClient().sendRequest(req);
+		 */
         
 		/* layout of how it will generally go
 		 * String regData = newUsername + "," + newPassword; Request regReq = new

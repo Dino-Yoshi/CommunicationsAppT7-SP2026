@@ -11,7 +11,6 @@ import networking.Request;
 public class RequestHandler {
 
     // ATTRIBUTES
-    private static RequestHandler instance;         // ***** NEW: singleton instance
     private List<Request> requestList;				// stores every request handled during this server run
     private int numRequests; 						// stores the number of requests handled during this server run
     private UserAuthenticator auth; 				// manages users, passwords, ids, and active sessions
@@ -21,34 +20,20 @@ public class RequestHandler {
     private StorageManager storageManager; 			// manages saved users, chat history, and offline messages
     private ConnectionManager connectionManager; 	// manages connected client mappings
 
-    // CONSTRUCTOR: private to avoid multiple handlers
-    private RequestHandler() {
+    // CONSTRUCTOR
+    public RequestHandler() {
         this.requestList = new ArrayList<>(); 	// creates the handled request list
         this.numRequests = 0; 					// starts handled request count at zero
         this.auth = new UserAuthenticator(); 	// creates the authentication manager
         this.groupManager = new GroupManager();	// creates the group manager
         this.contactManager = new ContactManager(); 			// creates the contact manager
         this.loggingManager = new LoggingManager("server.log"); // creates the logging manager using a simple log file
-        this.storageManager = new StorageManager("ITUsers.txt", "users.txt", "contacts.txt", "messages"); 	// creates the storage manager using a user file and message folder
+        this.storageManager = new StorageManager("ITUsers.txt", "users.txt", "messages"); 	// creates the storage manager using a user file and message folder
         this.connectionManager = new ConnectionManager(); 					// creates the connection manager
         this.auth.loadUsers(this.storageManager.loadUsers()); 				// loads saved users into the authentication manager
         this.auth.loadITUsers(this.storageManager.loadITUsers());			// loads saved ITUsers into the authentication manager
-        this.contactManager.importContacts(this.storageManager.loadContacts());	// ***** NEW: restores contacts after boot
-
     }
 
-    // ***** NEW: returns the one shared RequestHandler instance for the running server
-    public static synchronized RequestHandler getInstance() {
-        if (instance == null) {
-            instance = new RequestHandler();
-        }
-        return instance;
-    }
-
-    // ***** NEW: helper method for tests
-    public static synchronized void resetInstanceForTests() {
-        instance = null;
-    }
     
     // METHODS
 
@@ -277,7 +262,6 @@ public class RequestHandler {
         boolean added = contactManager.addContact(owner, contact);	// attempts to add the contact
         
         if (added) {	// checks if the contact was added
-            storageManager.saveContacts(contactManager.exportContacts()); // ***** NEW: persist contacts after add
             return createResponse("SUCCESS: contact added", Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(contact), request.getSenderID());	// returns success response
         }	// end added check
         return createResponse("ERROR: contact was not added", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
@@ -295,7 +279,6 @@ public class RequestHandler {
         boolean removed = contactManager.removeContact(owner, contact);	// attempts to remove the contact
         
         if (removed) {	// checks if the contact was removed
-            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: persist contacts after removal
             return createResponse("SUCCESS: contact removed", Request.REQUESTTYPE.SUCCESS, -1, request.getSenderID());	// returns success response
         }	// end removed check
         return createResponse("ERROR: contact was not removed", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
@@ -306,6 +289,11 @@ public class RequestHandler {
         if (!senderIsLoggedIn(request)) {	// checks if the sender is not logged in
             return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	// returns login required response
         }	// end logged in check
+        
+        if(auth.getIdByUsername(request.getData()) == null){
+        	return createResponse("ERROR: chat must be selected to refresh", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());
+        }
+        
         List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	// loads chat history from storage
         return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
     }
@@ -350,8 +338,7 @@ public class RequestHandler {
         if (created) { // checks if the group was created
         	if(!auth.registerGroup(groupName) && members.size() != 2) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
         	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
-            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: persist creator's group contact too
-        	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
+            loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // saves the log
             return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());	// returns success response
         }	// end group creation success check
