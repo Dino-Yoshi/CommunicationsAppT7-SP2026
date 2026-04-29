@@ -71,69 +71,44 @@ public class LoginView extends JPanel{
 		String username = userFieldUI.getText();
 		String password = new String(passFieldUI.getPassword());
 		
-		//if any field is empty
+		// If any field is empty, exit
 		if(username.isEmpty() || password.isEmpty()) return;
-		
-		//logic for validation
-		//this is just some hardCoded logic just to test out all buttons and field work
-		/*
-		if(username.equals("bob") && password.equals("pass123")) {
-			System.out.println("Successful login by: "+ username);
-			mainGUI.switchView(VIEWSTATE.MENU);
-			clearFields();
-		}
-		else if(username.equals("admin") && password.equals("admin123")) {
-			System.out.println("IT admin was successful");
-			mainGUI.switchView(VIEWSTATE.ITPANEL);
-			clearFields();
-		}
-		else {
-			System.out.println("Failed LOGIN ATTEMPT");
-			
-			JOptionPane.showMessageDialog(this, "Invalid Credentials", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		
-		//this bottom code is what will be primarily used when fully integrated
-		/// 
-		 */
-		
-		
-		/// dummy example request creation test for logging in as a regular user and GUI panes.
-		
-		 // format the username and password.
+				
 		 String creds = username + "," + password;
 		 
 		 // create a login request
 		 Request loginReq = new Request(creds, "USER", "SERVER", 7, -1, -1);
-		  
-		 // determine the behavior
 		 
 		 User user = new User(username, password);
 		 
 		 Request res = mainGUI.getNetworkClient().connectToServer(loginReq, user);
 		 
-		 // either login or fail
-		 if(res != null) {
-			 System.out.println("Successful login by: "+ username);
-			 
-			 // new user to set id
-			 if(res.getSenderID() == 0) {
-				 mainGUI.getChatOverlayView().setITButton();
-			 }
-			 
-			 mainGUI.setCurrentUser(user);
-			 mainGUI.switchView(VIEWSTATE.MENU);
-			 clearFields();
-			 
-		 }else {
-			 JOptionPane.showMessageDialog(this, "An unknown exception has occurred. Please contact your admin.", "Unknown Error", JOptionPane.ERROR_MESSAGE);
-		 }
-		 
-		 // clear the fields
-		 clearFields();
-		
-		 
-		
+		// either login or fail
+			if (res != null && res.getType() == Request.REQUESTTYPE.SUCCESS) {
+						 
+				//clears chat		
+					mainGUI.getChatOverlayView().clearChatState();
+						 
+					//check if we tagged the user as IT
+					if ("IT".equals(res.getRecipientType()) || (res.getData() != null && res.getData().contains("logged in as an IT"))) {
+					    System.out.println("Successful IT login by: " + username);
+					    ITUser adminUser = new ITUser(username, password);
+					    adminUser.setUID(res.getRecipientID());
+					    mainGUI.setCurrentUser(adminUser);
+					    mainGUI.getChatOverlayView().setITButton(); 
+					    mainGUI.switchView(VIEWSTATE.ITPANEL); 
+					}
+				else {//normal user login
+					System.out.println("Successful login by: " + username);
+					mainGUI.setCurrentUser(user);
+					mainGUI.switchView(VIEWSTATE.MENU); 
+				}	 
+					clearFields();
+						 
+			} else {
+						 
+					JOptionPane.showMessageDialog(this, "Login Failed. Invalid credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		
 	}
 	
