@@ -105,9 +105,8 @@ public class LoginView extends JPanel{
 				}	 
 					clearFields();
 						 
-			} else {
-						 
-					JOptionPane.showMessageDialog(this, "Login Failed. Invalid credentials.", "Error", JOptionPane.ERROR_MESSAGE);
+			} else { 
+					JOptionPane.showMessageDialog(this, "Login Failed. Server Address or Credentials may be invalid.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		
 	}
