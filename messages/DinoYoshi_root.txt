@@ -1,2 +1,4 @@
 root: hello
 root: goodbye
+root: explode yourself
+DinoYoshi: wtf

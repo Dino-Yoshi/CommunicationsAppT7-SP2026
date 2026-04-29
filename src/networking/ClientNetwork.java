@@ -78,12 +78,13 @@ public class ClientNetwork {
 			    
 			    
 			}catch(IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
+				System.err.println("Connection Error. Server may be down, or IP and Port may be invalid.");
 				return null; // ioexception
 			}catch(ClassNotFoundException e) {
 		    	e.printStackTrace();
 		    	return null; // classnotfoundexception
-		    }
+			}
 		}else {
 			return null; // server is already connected. 
 		}
