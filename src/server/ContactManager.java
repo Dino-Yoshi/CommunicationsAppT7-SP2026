@@ -10,6 +10,10 @@ import java.util.Set;
 // CLASS DESCRIPTION:
 // manages each user's contact list
 
+// push notes: difficulty merging with main, new additions include:
+// - exportContacts() method
+// - importContacts() method
+
 public class ContactManager {
 
     // ATTRIBUTES

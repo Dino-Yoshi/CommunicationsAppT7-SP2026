@@ -8,10 +8,20 @@ import networking.Request;
 // CLASS DESCRIPTION:
 // receives requests and manages authentication, storage, logging, contacts, groups, and connections
 
+// push notes: difficulty merging with main, new additions include:
+// - instance attribute
+// - getIntance() method
+// - restInstance method for testing
+
 public class RequestHandler {
 
     // ATTRIBUTES
+<<<<<<< clarize-server-v2
+    private static RequestHandler instance;         // ***** NEW: singleton instance
+    
+=======
 	private static RequestHandler instance;
+>>>>>>> main
     private List<Request> requestList;				// stores every request handled during this server run
     private int numRequests; 						// stores the number of requests handled during this server run
     private UserAuthenticator auth; 				// manages users, passwords, ids, and active sessions
@@ -37,6 +47,8 @@ public class RequestHandler {
 
     }
 
+    // making RequestHandler a singleton
+    
     // ***** NEW: returns the one shared RequestHandler instance for the running server
     public static synchronized RequestHandler getInstance() {
         if (instance == null) {

@@ -4,6 +4,8 @@ import server.StorageManager;
 import server.UserAuthenticator;
 import networking.Request;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,9 @@ public class StorageLoadChatHistory {
         Request r = new Request("hello,victor", "USER", "USER", 0, 1, 2);
         sm.saveMessage(r, ua);
 
-        assertEquals(true, sm.loadChatHistory(1, 2, ua).get(0).contains("hello"));
+        List<String> history = sm.loadChatHistory(1, 2, ua);
+
+        assertEquals(true, history.size() >= 1);
+        assertEquals("clarize: hello", history.get(history.size() - 1));
     }
 }
