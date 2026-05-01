@@ -17,12 +17,19 @@ import java.util.Map;
 // CLASS DESCRIPTION:
 // handles user persistence, chat history persistence, contact persistence, and offline message storage
 
+// push notes: difficulty merging with main, new additions include:
+// - contactsFilePath attribute
+// - saveContacts() method
+// - loadContacts() method
+
 public class StorageManager {
 	
 	// ATTRIBUTES
     private String userFilePath;							// stores the file path where username and password pairs are saved
     private String ITUserFilePath;							// stores file path for it users
+    
     private String contactsFilePath;						// ***** NEW: stores file path for saved contacts
+    
     private String messageDirectory;						// stores the directory where conversation files are saved
     private Map<Integer, List<Request>> offlineMessages;	// maps recipient ids to queued Request objects for offline delivery
 
