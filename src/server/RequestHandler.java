@@ -16,12 +16,7 @@ import networking.Request;
 public class RequestHandler {
 
     // ATTRIBUTES
-<<<<<<< clarize-server-v2
     private static RequestHandler instance;         // ***** NEW: singleton instance
-    
-=======
-	private static RequestHandler instance;
->>>>>>> main
     private List<Request> requestList;				// stores every request handled during this server run
     private int numRequests; 						// stores the number of requests handled during this server run
     private UserAuthenticator auth; 				// manages users, passwords, ids, and active sessions
@@ -507,6 +502,8 @@ public class RequestHandler {
         }	// end parsed part loop
         return values;	// returns parsed values
     }
+    
+    
 }
 
 
