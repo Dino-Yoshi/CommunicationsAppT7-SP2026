@@ -115,4 +115,13 @@ public class ContactManager {
         String trimmed = value.trim();				// removes leading and trailing spaces
         return trimmed.isEmpty() ? null : trimmed;	// returns null for blank text, otherwise returns the cleaned text
     }
+    
+    public void importContacts(boolean n) {
+    	// clarize code here and any function changes needed.
+    }
+    
+    public void exportContacts() {
+    	// clarize code here and any function changes needed.
+    }
+    
 }

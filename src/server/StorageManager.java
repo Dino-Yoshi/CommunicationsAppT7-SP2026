@@ -190,4 +190,14 @@ public class StorageManager {
         Collections.sort(users); 	// sorts names so both use the same conversation file
         return messageDirectory + File.separator + users.get(0) + "_" + users.get(1) + ".txt"; 	// returns final conversation file path
     }
+    
+    public boolean loadContacts() {
+    	// Clarize Code here, and any function changes needed here.
+    	return true;
+    	
+    }
+    
+    public void saveContacts() {
+    	// Clarize code here, and any function changes needed here.
+    }
 }
