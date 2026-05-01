@@ -51,6 +51,10 @@ public class RequestHandler {
         }
         return instance;
     }
+    
+    public static void resetInstanceForTests() {
+    	// Clarize Code Here and any function changes neede
+    }
 
     
     // METHODS
@@ -503,7 +507,7 @@ public class RequestHandler {
         return values;	// returns parsed values
     }
     
-    
+   
 }
 
 
