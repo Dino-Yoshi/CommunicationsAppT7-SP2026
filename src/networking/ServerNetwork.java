@@ -1,4 +1,4 @@
-// TODO: ServerNetwork and ClientNetwork must be built together.
+
 package networking;
 
 import java.io.EOFException;
@@ -153,6 +153,11 @@ public class ServerNetwork {
 
 		        	}catch(ClassNotFoundException e) {
 		        		e.printStackTrace();
+		        	}catch(EOFException e) {
+		        		System.err.println("Client was abruptly terminated! If this was intentional, this can be safely " +
+		        							"ignored.");
+		        		//e.printStackTrace();
+		        		break;
 		        	}
 
 		        }while(InboundMsg.getType() != Request.REQUESTTYPE.LOGOUT);
@@ -188,7 +193,7 @@ public class ServerNetwork {
 	
 	// ServerNetwork methods
 	
-	public static int getPort() {
+	public int getPort() {
 		return port;
 	}
 

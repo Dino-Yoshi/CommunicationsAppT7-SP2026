@@ -110,7 +110,7 @@ public class UserAuthenticator {
     // checks if a username already exists
     public synchronized boolean userExists(String username) {
         String cleanUsername = normalize(username);	// cleans username
-        return cleanUsername != null && userCredentials.containsKey(cleanUsername);	// returns true if username exists
+        return cleanUsername != null && (userCredentials.containsKey(cleanUsername) || ITUserCredentials.containsKey(cleanUsername));	// returns true if username exists 
     }
 
     // checks if a username is currently logged in
@@ -199,6 +199,13 @@ public class UserAuthenticator {
                 results.add(username);	// adds the matching username to the result list
             }	// end match check
         }	// end loop
+        
+        for (String username : ITUserCredentials.keySet()) { // queries the ITUser set as well. 
+        	if (username.toLowerCase().contains(lowerQuery)) {	// checks whether the username contains the query text
+                results.add(username);	// adds the matching username to the result list
+            }	// end match check
+        }
+        
         return results;	// returns all usernames that matched the search query
     }
 
