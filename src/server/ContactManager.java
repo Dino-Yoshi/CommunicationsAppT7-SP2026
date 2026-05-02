@@ -116,12 +116,45 @@ public class ContactManager {
         return trimmed.isEmpty() ? null : trimmed;	// returns null for blank text, otherwise returns the cleaned text
     }
     
-    public void importContacts(boolean n) {
-    	// clarize code here and any function changes needed.
+    public synchronized Map<String, List<String>> exportContacts() {
+        Map<String, List<String>> copy = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Set<String>> entry : contactsByUser.entrySet()) {
+            copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+
+        return copy;
     }
-    
-    public void exportContacts() {
-    	// clarize code here and any function changes needed.
+
+    public synchronized void importContacts(Map<String, List<String>> savedContacts) {
+        contactsByUser.clear();
+
+        if (savedContacts == null) {
+            return;
+        }
+
+        for (Map.Entry<String, List<String>> entry : savedContacts.entrySet()) {
+            String owner = normalize(entry.getKey());
+
+            if (owner == null) {
+                continue; 
+            }
+
+            contactsByUser.putIfAbsent(owner, new LinkedHashSet<>());
+
+            if (entry.getValue() == null) {
+                continue;
+            }
+
+            for (String contact : entry.getValue()) {
+                String cleanContact = normalize(contact);
+
+                // NEW: skips invalid or self-contact entries while restoring
+                if (cleanContact != null && !owner.equals(cleanContact)) {
+                    contactsByUser.get(owner).add(cleanContact);
+                }
+            }
+        }
     }
     
 }
