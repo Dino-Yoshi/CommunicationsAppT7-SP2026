@@ -1,2 +1,6 @@
-root:DinoYoshi,Clarize
+root:DinoYoshi,Clarize,Victor
 DinoYoshi:root
+Edward:Clarize
+Clarize:root,DinoYoshi
+Victor:Clarize
+
