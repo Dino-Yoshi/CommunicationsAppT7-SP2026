@@ -38,6 +38,7 @@ public class StorageManager {
     	this.ITUserFilePath = ITUserFilePath;
         this.userFilePath = userFilePath;					// stores the user file path
         this.messageDirectory = messageDirectory;			// stores the message directory path
+        this.contactsFilePath = contactsFilePath;			// stores the contacts file path
         this.offlineMessages = new HashMap<>();				// creates the offline message map
         File messageFolder = new File(messageDirectory);	// creates a File object representing the message directory
         if (!messageFolder.exists()) { 						// checks whether the message directory exists
