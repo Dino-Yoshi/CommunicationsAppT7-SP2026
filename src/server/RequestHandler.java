@@ -284,6 +284,7 @@ public class RequestHandler {
         boolean added = contactManager.addContact(owner, contact);	// attempts to add the contact
         
         if (added) {	// checks if the contact was added
+            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the full contact map
             return createResponse("SUCCESS: contact added", Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(contact), request.getSenderID());	// returns success response
         }	// end added check
         return createResponse("ERROR: contact was not added", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
@@ -301,6 +302,7 @@ public class RequestHandler {
         boolean removed = contactManager.removeContact(owner, contact);	// attempts to remove the contact
         
         if (removed) {	// checks if the contact was removed
+            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the full contact map
             return createResponse("SUCCESS: contact removed", Request.REQUESTTYPE.SUCCESS, -1, request.getSenderID());	// returns success response
         }	// end removed check
         return createResponse("ERROR: contact was not removed", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
@@ -360,7 +362,8 @@ public class RequestHandler {
         if (created) { // checks if the group was created
         	if(!auth.registerGroup(groupName) && members.size() != 2) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
         	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
-            loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
+            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the updated contact map
+        	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // saves the log
             return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());	// returns success response
         }	// end group creation success check
