@@ -91,6 +91,7 @@ public class UserAuthenticator {
     		return false; // this group chat already exists.
     	}
     	
+    	
         usernameToId.put(groupName, nextUserId);		// maps the username to the next available id
         idToUsername.put(nextUserId, groupName);		// maps the new id back to the username
         nextUserId++;
