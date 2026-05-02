@@ -191,13 +191,59 @@ public class StorageManager {
         return messageDirectory + File.separator + users.get(0) + "_" + users.get(1) + ".txt"; 	// returns final conversation file path
     }
     
-    public boolean loadContacts() {
-    	// Clarize Code here, and any function changes needed here.
-    	return true;
-    	
+    public synchronized Map<String, List<String>> loadContacts() {
+        Map<String, List<String>> contacts = new LinkedHashMap<>();
+        File file = new File(contactsFilePath);
+
+        if (!file.exists()) { 
+            return contacts;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) { 
+            String line; // NEW
+
+            while ((line = reader.readLine()) != null) { 
+                String[] parts = line.split(":", 2); 
+                String owner = parts[0].trim(); 
+                List<String> values = new ArrayList<>();
+
+                if (parts.length > 1 && !parts[1].isBlank()) { 
+                    String[] contactParts = parts[1].split(","); 
+
+                    for (String contact : contactParts) { 
+                        String cleanContact = contact.trim(); 
+                        if (!cleanContact.isEmpty()) { 
+                            values.add(cleanContact); 
+                        } 
+                    } 
+                } 
+
+                if (!owner.isBlank()) { 
+                    contacts.put(owner, values); 
+                }
+            } 
+        } catch (IOException e) { 
+            System.out.println("Failed to load contacts: " + e.getMessage()); 
+        } 
+
+        return contacts; 
     }
     
-    public void saveContacts() {
-    	// Clarize code here, and any function changes needed here.
+    public synchronized void saveContacts(Map<String, List<String>> contacts) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(contactsFilePath))) {
+            if (contacts == null) {
+                return;
+            }
+
+            for (Map.Entry<String, List<String>> entry : contacts.entrySet()) {
+                String owner = entry.getKey(); // NEW
+                List<String> values = entry.getValue() == null ? new ArrayList<>() : entry.getValue();
+
+                writer.write(owner + ":" + String.join(",", values));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to save contacts: " + e.getMessage());
+        }
     }
 }

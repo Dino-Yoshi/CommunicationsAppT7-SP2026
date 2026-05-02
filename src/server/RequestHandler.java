@@ -11,7 +11,7 @@ import networking.Request;
 // push notes: difficulty merging with main, new additions include:
 // - instance attribute
 // - getIntance() method
-// - restInstance method for testing
+// - resetInstance method for testing
 
 public class RequestHandler {
 
@@ -53,7 +53,7 @@ public class RequestHandler {
     }
     
     public static void resetInstanceForTests() {
-    	// Clarize Code Here and any function changes neede
+        instance = null;
     }
 
     
