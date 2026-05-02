@@ -361,10 +361,13 @@ public class RequestHandler {
         
         if (created) { // checks if the group was created
         	if(!auth.registerGroup(groupName) && members.size() != 2) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
+        	
+        	if(!auth.userExists(groupName)) {storageManager.saveUser(groupName, "iamnotarealuserdonotactuallyloginasme");} // if 
+        	
         	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
             storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the updated contact map
         	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
-            loggingManager.saveLogs(); // saves the log
+            loggingManager.saveLogs(); // s the log
             return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());	// returns success response
         }	// end group creation success check
         return createResponse("ERROR: group was not created", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
