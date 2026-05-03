@@ -844,3 +844,14 @@ Sat May 02 18:14:57 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | 
 Sat May 02 18:15:06 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=bold words for someone in sudo rm -rf range
 Sat May 02 18:19:19 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
 Sat May 02 18:19:25 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:35:41 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:36:09 PDT 2026 | LOGIN_SUCCESS | sender=DinoYoshi | recipient=SERVER | content=login successful
+Sat May 02 18:36:16 PDT 2026 | PRIVATE_MESSAGE | sender=DinoYoshi | recipient= | content=yo root you there
+Sat May 02 18:36:28 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=yeah whatchu need
+Sat May 02 18:36:54 PDT 2026 | PRIVATE_MESSAGE | sender=DinoYoshi | recipient= | content=nothing just testing if you can see these messages. not doing anything suspicious so dont look into it thanks.
+Sat May 02 18:36:58 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=hmm
+Sat May 02 18:37:10 PDT 2026 | PRIVATE_MESSAGE | sender=DinoYoshi | recipient= | content=shh
+Sat May 02 18:37:12 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=im taking al ook
+Sat May 02 18:37:31 PDT 2026 | SEARCH | sender=15 | recipient=SERVER | content=d
+Sat May 02 18:39:29 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:39:35 PDT 2026 | LOGOUT | sender=DinoYoshi | recipient=SERVER | content=logout successful
