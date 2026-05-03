@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 // CLASS DESCRIPTION:
 // handles user persistence, chat history persistence, contact persistence, and offline message storage
@@ -27,6 +28,7 @@ public class StorageManager {
 	// ATTRIBUTES
     private String userFilePath;							// stores the file path where username and password pairs are saved
     private String ITUserFilePath;							// stores file path for it users
+    private String GroupFilePath;
     
     private String contactsFilePath;						// ***** NEW: stores file path for saved contacts
     
@@ -34,7 +36,8 @@ public class StorageManager {
     private Map<Integer, List<Request>> offlineMessages;	// maps recipient ids to queued Request objects for offline delivery
 
     // CONSTRUCTOR (4 arguments)
-    public StorageManager(String ITUserFilePath, String userFilePath, String contactsFilePath, String messageDirectory) {
+    public StorageManager(String GroupsFilePath, String ITUserFilePath, String userFilePath, String contactsFilePath, String messageDirectory) {
+    	this.GroupFilePath = GroupsFilePath;
     	this.ITUserFilePath = ITUserFilePath;
         this.userFilePath = userFilePath;					// stores the user file path
         this.messageDirectory = messageDirectory;			// stores the message directory path
@@ -126,6 +129,29 @@ public class StorageManager {
             System.out.println("Failed to save message: " + e.getMessage());	// prints the error to the console
         }	// end try-catch block
     }
+    
+ // saves a direct message request into a conversation file
+    public synchronized void saveGroupMessage(Request message, UserAuthenticator auth) {
+        if (message == null) {	// checks if message exists
+        	return;
+        }	// end missing message check
+        
+        String data = message.getData();
+    	String safeData = data == null ? "" : data;	// converts null data to empty text
+        String[] parts = safeData.split(",", 2); 	// splits data into two parts at the first comma
+        String first = parts.length > 0 ? parts[0].trim() : "";		// reads the first parsed value
+        String second = parts.length > 1 ? parts[1].trim() : ""; 	// reads the second parsed value
+        String[] res = new String[] { first, second };						// returns the two parsed values
+    	
+        String filePath = messageDirectory + File.separator + second + ".txt";	// computes the conversation file path
+        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {// opens the conversation file in append mode
+            writer.write(auth.getUsernameById(message.getSenderID()) + ": " + res[0]);	// writes the message in a readable sender to recipient format
+            writer.newLine();		// inserts a newline so each message stays on its own line
+        } catch (IOException e) {	// catches file writing errors
+            System.out.println("Failed to save message: " + e.getMessage());	// prints the error to the console
+        }	// end try-catch block
+    }
 
     // loads direct chat history between two numeric ids
     public synchronized List<String> loadChatHistory(int senderID, int recipientID, UserAuthenticator auth) {
@@ -148,6 +174,27 @@ public class StorageManager {
         return history;	// returns the loaded history lines
     }
 
+    // loads a chat history file from a group
+    public synchronized List<String> loadGroupChatHistory(String senderName) {
+        List<String> history = new ArrayList<>();	// creates the list that will hold the loaded conversation lines
+        String filePath = messageDirectory + File.separator + senderName + ".txt";// computes the same path used during saving
+        File file = new File(filePath);	// creates a File object for the conversation file
+        
+        if (!file.exists()) { 			// checks if the conversation file exists
+            return history; 			// returns an empty list if no history file exists yet
+        }	// end missing file check
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {	// opens the conversation file for reading
+            String line;	// declares a variable for each line read from the file
+            while ((line = reader.readLine()) != null) {	// start loop through every line in the conversation file
+                history.add(line);	// adds the current line into the history list
+            }	// end loop
+        } catch (IOException e) {	// catches file reading errors
+            System.out.println("Failed to load chat history: " + e.getMessage());	// prints the error to the console
+        }	// end try-catch block
+        return history;	// returns the loaded history lines
+    }
+    
     // stores a request for later delivery to an offline recipient
     public synchronized void storeOfflineMessage(int recipientID, Request message) {
         if (message == null) {	// checks if message exists
@@ -177,6 +224,9 @@ public class StorageManager {
     private String buildConversationPath(int senderID, int recipientID, UserAuthenticator auth) {
         String user1 = auth == null ? null : auth.getUsernameById(senderID); 	// resolves the sender id to a username
         String user2 = auth == null ? null : auth.getUsernameById(recipientID); // resolves the recipient id to a username
+        
+        
+        
         
         if (user1 == null) { 			// checks if the sender id could not be resolved
             user1 = "user" + senderID; 	// uses a fallback sender name
@@ -247,4 +297,63 @@ public class StorageManager {
             System.out.println("Failed to save contacts: " + e.getMessage());
         }
     }
+    
+    // appends a group and the members to a file.
+    public synchronized void saveGroups(Map<String, List<String>> groups) {
+    	try (BufferedWriter writer = new BufferedWriter(new FileWriter(GroupFilePath))) {
+            if (groups == null) {
+                return;
+            }
+
+            for (Map.Entry<String, List<String>> entry : groups.entrySet()) {
+                String owner = entry.getKey(); 
+                List<String> values = entry.getValue() == null ?  new ArrayList<>() : entry.getValue();
+
+                writer.write(owner + ":" + String.join(",", values));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to save groups: " + e.getMessage());
+        }
+    }
+    
+    public synchronized Map<String, List<String>> loadGroups() {
+        Map<String, List<String>> groups = new LinkedHashMap<>();
+        File file = new File(GroupFilePath);
+
+        if (!file.exists()) { 
+            return groups;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) { 
+            String line; // NEW
+
+            while ((line = reader.readLine()) != null) { 
+                String[] parts = line.split(":", 2); 
+                String owner = parts[0].trim(); 
+                List<String> values = new ArrayList<>();
+
+                if (parts.length > 1 && !parts[1].isBlank()) { 
+                    String[] contactParts = parts[1].split(","); 
+
+                    for (String contact : contactParts) { 
+                        String cleanContact = contact.trim(); 
+                        if (!cleanContact.isEmpty()) { 
+                            values.add(cleanContact); 
+                        } 
+                    } 
+                } 
+
+                if (!owner.isBlank()) { 
+                	groups.put(owner, values); 
+                }
+            } 
+        } catch (IOException e) { 
+            System.out.println("Failed to load contacts: " + e.getMessage()); 
+        } 
+
+        return groups; 
+    }
+    
+    
 }
