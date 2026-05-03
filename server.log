@@ -735,3 +735,112 @@ Sat May 02 16:17:15 PDT 2026 | LOGIN_SUCCESS | sender=Victor | recipient=SERVER 
 Sat May 02 16:19:32 PDT 2026 | LOGIN_SUCCESS | sender=Darien | recipient=SERVER | content=login successful
 Sat May 02 16:20:25 PDT 2026 | PRIVATE_MESSAGE | sender=Darien | recipient=admins | content=test
 Sat May 02 16:20:29 PDT 2026 | LOGOUT | sender=Darien | recipient=SERVER | content=logout successful
+Sat May 02 17:03:07 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:03:15 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=Clarize | content=hey
+Sat May 02 17:03:22 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 17:03:25 PDT 2026 | LOGIN_SUCCESS | sender=Clarize | recipient=SERVER | content=login successful
+Sat May 02 17:03:28 PDT 2026 | PRIVATE_MESSAGE | sender=Clarize | recipient=root | content=hi
+Sat May 02 17:03:29 PDT 2026 | LOGOUT | sender=Clarize | recipient=SERVER | content=logout successful
+Sat May 02 17:03:32 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:03:41 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=a
+Sat May 02 17:03:52 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=Victor
+Sat May 02 17:03:57 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=Team 7 | content=created private chat
+Sat May 02 17:04:51 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:05:08 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:05:30 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:05:37 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=i
+Sat May 02 17:06:14 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=Team 7 | content=created group
+Sat May 02 17:06:43 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=test
+Sat May 02 17:06:57 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=Victor | content=test
+Sat May 02 17:08:53 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=test
+Sat May 02 17:12:48 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=yo
+Sat May 02 17:13:15 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=what
+Sat May 02 17:13:50 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 17:13:53 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:13:57 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 17:14:08 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:14:12 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 17:14:34 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:16:40 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:22:34 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:46:17 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:46:22 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=Victor | content=test
+Sat May 02 17:46:32 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=DinoYoshi | content=konnichiwa
+Sat May 02 17:46:42 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=i
+Sat May 02 17:46:45 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=Team 7 | content=created group
+Sat May 02 17:46:56 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=test
+Sat May 02 17:49:17 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:49:58 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:50:19 PDT 2026 | LOGIN_FAILED | sender=root | recipient=SERVER | content=login failed
+Sat May 02 17:50:23 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:50:32 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=DinoYoshi | content=konbanwa
+Sat May 02 17:50:37 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=Victor | content=eeyaoaw
+Sat May 02 17:50:48 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=i
+Sat May 02 17:50:54 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=Team 7 | content=created group
+Sat May 02 17:51:03 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=fuck my chud life
+Sat May 02 17:56:36 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 17:56:41 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=Clarize | content=test123
+Sat May 02 17:56:45 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient=Clarize | content=test333
+Sat May 02 17:56:51 PDT 2026 | READ_LOG | sender=12 | recipient=SERVER | content=read logs
+Sat May 02 17:56:51 PDT 2026 | READ_LOG | sender=12 | recipient=SERVER | content=read logs
+Sat May 02 17:57:04 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=
+Sat May 02 17:57:06 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=i
+Sat May 02 17:57:09 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=Team 7 | content=created group
+Sat May 02 17:57:13 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=hoi
+Sat May 02 17:58:11 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:02:37 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:02:52 PDT 2026 | LOGIN_SUCCESS | sender=Victor | recipient=SERVER | content=login successful
+Sat May 02 18:02:55 PDT 2026 | SEARCH | sender=6 | recipient=SERVER | content=
+Sat May 02 18:02:56 PDT 2026 | SEARCH | sender=6 | recipient=SERVER | content=t
+Sat May 02 18:02:59 PDT 2026 | SEARCH | sender=6 | recipient=SERVER | content=Team
+Sat May 02 18:03:01 PDT 2026 | SEARCH | sender=6 | recipient=SERVER | content=i
+Sat May 02 18:03:07 PDT 2026 | GROUP_MESSAGE | sender=Victor | recipient=Team 7 | content=created private chat
+Sat May 02 18:06:11 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:06:19 PDT 2026 | SEARCH | sender=12 | recipient=SERVER | content=i
+Sat May 02 18:06:25 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=Team 7 | content=created group
+Sat May 02 18:06:30 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=fuck my chud life
+Sat May 02 18:06:34 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:06:37 PDT 2026 | LOGIN_SUCCESS | sender=Victor | recipient=SERVER | content=login successful
+Sat May 02 18:06:42 PDT 2026 | PRIVATE_MESSAGE | sender=Victor | recipient= | content=hey man don't say that
+Sat May 02 18:06:46 PDT 2026 | LOGOUT | sender=Victor | recipient=SERVER | content=logout successful
+Sat May 02 18:06:49 PDT 2026 | LOGIN_FAILED | sender=clarize | recipient=SERVER | content=login failed
+Sat May 02 18:06:54 PDT 2026 | LOGIN_SUCCESS | sender=Clarize | recipient=SERVER | content=login successful
+Sat May 02 18:07:10 PDT 2026 | PRIVATE_MESSAGE | sender=Clarize | recipient= | content=yes lets not use offensive language in a school setting
+Sat May 02 18:07:21 PDT 2026 | LOGOUT | sender=Clarize | recipient=SERVER | content=logout successful
+Sat May 02 18:07:24 PDT 2026 | LOGIN_SUCCESS | sender=Darien | recipient=SERVER | content=login successful
+Sat May 02 18:07:26 PDT 2026 | LOGOUT | sender=Darien | recipient=SERVER | content=logout successful
+Sat May 02 18:07:33 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:07:37 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:07:52 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:11:35 PDT 2026 | SEARCH | sender=13 | recipient=SERVER | content=Dino
+Sat May 02 18:11:38 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=you and me | content=created group
+Sat May 02 18:11:46 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=so sillly
+Sat May 02 18:11:52 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:11:58 PDT 2026 | LOGIN_SUCCESS | sender=DinoYoshi | recipient=SERVER | content=login successful
+Sat May 02 18:12:05 PDT 2026 | PRIVATE_MESSAGE | sender=DinoYoshi | recipient= | content=im not silly YOU'RE silly
+Sat May 02 18:12:07 PDT 2026 | LOGOUT | sender=DinoYoshi | recipient=SERVER | content=logout successful
+Sat May 02 18:12:09 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:13:12 PDT 2026 | SEARCH | sender=13 | recipient=SERVER | content=i
+Sat May 02 18:13:21 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=party time | content=created group
+Sat May 02 18:13:25 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=its party time
+Sat May 02 18:13:31 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sat May 02 18:13:34 PDT 2026 | LOGIN_SUCCESS | sender=Darien | recipient=SERVER | content=login successful
+Sat May 02 18:13:38 PDT 2026 | PRIVATE_MESSAGE | sender=Darien | recipient= | content=no it aint
+Sat May 02 18:13:40 PDT 2026 | LOGOUT | sender=Darien | recipient=SERVER | content=logout successful
+Sat May 02 18:13:44 PDT 2026 | LOGIN_SUCCESS | sender=Clarize | recipient=SERVER | content=login successful
+Sat May 02 18:13:51 PDT 2026 | PRIVATE_MESSAGE | sender=Clarize | recipient= | content=its coffee time
+Sat May 02 18:13:52 PDT 2026 | LOGOUT | sender=Clarize | recipient=SERVER | content=logout successful
+Sat May 02 18:14:03 PDT 2026 | LOGIN_FAILED | sender=DinoYoshi | recipient=SERVER | content=login failed
+Sat May 02 18:14:06 PDT 2026 | LOGIN_SUCCESS | sender=DinoYoshi | recipient=SERVER | content=login successful
+Sat May 02 18:14:14 PDT 2026 | PRIVATE_MESSAGE | sender=DinoYoshi | recipient= | content=THE DEATH OF YOUR FRIENDS WILL MAKE YOU DESPAIR
+Sat May 02 18:14:24 PDT 2026 | LOGOUT | sender=DinoYoshi | recipient=SERVER | content=logout successful
+Sat May 02 18:14:28 PDT 2026 | LOGIN_SUCCESS | sender=Victor | recipient=SERVER | content=login successful
+Sat May 02 18:14:34 PDT 2026 | PRIVATE_MESSAGE | sender=Victor | recipient= | content=hey man; chill out
+Sat May 02 18:14:36 PDT 2026 | LOGOUT | sender=Victor | recipient=SERVER | content=logout successful
+Sat May 02 18:14:39 PDT 2026 | LOGIN_SUCCESS | sender=admin | recipient=SERVER | content=login successful
+Sat May 02 18:14:49 PDT 2026 | PRIVATE_MESSAGE | sender=admin | recipient= | content=why was i added to this. im reporting you all to HR
+Sat May 02 18:14:55 PDT 2026 | LOGOUT | sender=admin | recipient=SERVER | content=logout successful
+Sat May 02 18:14:57 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:15:06 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=bold words for someone in sudo rm -rf range
+Sat May 02 18:19:19 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sat May 02 18:19:25 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
