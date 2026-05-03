@@ -185,7 +185,7 @@ public class ChatOverlayView extends JPanel{
 		
 		// Darien Test (Sending Message)
 		Request req = new Request(content + "," + currentTargetID, "USER", "USER", 0, mainGUI.getCurrentUser().getUID(), -1);
-		Request res = mainGUI.getNetworkClient().sendRequest(req);
+		mainGUI.getNetworkClient().sendRequest(req);
 		
 	}
 	

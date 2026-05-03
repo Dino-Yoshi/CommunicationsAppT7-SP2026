@@ -4,7 +4,6 @@ import client.ITUser;
 
 //import junit.framework.*;
 
-import client.User;
 
 import static org.junit.jupiter.api.Assertions.*;
 
