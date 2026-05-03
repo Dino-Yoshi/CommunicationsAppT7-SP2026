@@ -85,6 +85,27 @@ public class UserAuthenticator {
         return true;	// returns success
     }
     
+    //register a new IT user-Victor
+    public synchronized boolean registerITUser(String username, String password) {
+        String cleanUsername = normalize(username);	// cleans username
+        String cleanPassword = password;			// keeps password as is
+        
+        if (cleanUsername == null || cleanPassword == null || cleanUsername.isBlank() || cleanPassword.isBlank()) {
+            return false;	
+        }
+   
+        //checks both maps to ensure we don't potentially overwrite normal user with IT user
+        if (userCredentials.containsKey(cleanUsername) || ITUserCredentials.containsKey(cleanUsername)) {
+            return false;	
+        }
+        
+        ITUserCredentials.put(cleanUsername, cleanPassword); // Store in the IT map!
+        usernameToId.put(cleanUsername, nextUserId);		
+        idToUsername.put(nextUserId, cleanUsername);		
+        nextUserId++;	
+        return true;	
+    }
+    
     synchronized boolean registerGroup(String groupName) {
     	
     	if(getIdByUsername(groupName) != null) {
