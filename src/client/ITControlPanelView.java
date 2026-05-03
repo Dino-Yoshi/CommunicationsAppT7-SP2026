@@ -182,22 +182,30 @@ public class ITControlPanelView extends JPanel{
             }
         });
         
-        //
+ 
+     // Handles clicking on a specific chat to view the real chat history
         userChatsList.addListSelectionListener(e -> {
-        	
-    		Request req = new Request("", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
-    		mainGUI.getNetworkClient().sendRequest(req);
-        	
             if (!e.getValueIsAdjusting() && userChatsList.getSelectedValue() != null) {
                 String selectedUser = searchResultsList.getSelectedValue();
                 String targetContact = userChatsList.getSelectedValue();
                 
                 logUI.setText("--- CHAT LOGS: " + selectedUser + " in " + targetContact + " ---\n\n");
-                logUI.append("[" + selectedUser + "] Hello everyone!\n");
                 
+                // Sends a request for chathistory with request with "UserA,UserB"
+                String requestData = selectedUser + "," + targetContact;
+                Request req = new Request(requestData, "IT", "SERVER", 4, mainGUI.getCurrentUser().getUID(), -1);
+                Request response = mainGUI.getNetworkClient().sendRequest(req);
+                
+                // Print the real history to the screen
+                if (response != null && response.getType() == Request.REQUESTTYPE.SUCCESS) {
+                	logUI.append(response.getData());
+                	logUI.setCaretPosition(0); // scrolls to the top
+                } else {
+                	logUI.append("No chat history found or failed to load.");
+                }
             }
-        });	
-    }
+        });
+  }
 	
 	public void registerNewUser() {
 		String newUserName = newUserUI.getText();
