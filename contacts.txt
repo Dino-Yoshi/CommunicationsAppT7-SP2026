@@ -1,6 +1,8 @@
-root:DinoYoshi,Clarize,Victor
-DinoYoshi:root
+root:DinoYoshi,Clarize,Victor,Team 7,you and me,party time
+DinoYoshi:root,you and me,party time
 Edward:Clarize
-Clarize:root,DinoYoshi
-Victor:Clarize
-
+Clarize:root,DinoYoshi,Team 7,party time
+Victor:Clarize,Team 7,party time
+admin:party time
+otheradmin:party time
+Darien:party time

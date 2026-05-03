@@ -12,6 +12,7 @@ public class StorageLoadUsers {
     @Test
     public void LoadUsersTest() {
         StorageManager sm = new StorageManager(
+        		"testGroups.txt",
                 "testITUsers.txt",
                 "testusers.txt",
                 "testcontacts.txt",

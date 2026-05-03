@@ -132,4 +132,46 @@ public class GroupManager {
         String trimmed = value.trim();				// removes leading and trailing spaces
         return trimmed.isEmpty() ? null : trimmed;	// returns null for blank text otherwise returns the cleaned text
     }
+    
+    public synchronized void loadGroups(Map<String, List<String>> savedContacts) {
+        groups.clear();
+
+        if (savedContacts == null) {
+            return;
+        }
+
+        for (Map.Entry<String, List<String>> entry : savedContacts.entrySet()) {
+            String owner = normalize(entry.getKey());
+
+            if (owner == null) {
+                continue; 
+            }
+
+            groups.putIfAbsent(owner, new LinkedHashSet<>());
+
+            if (entry.getValue() == null) {
+                continue;
+            }
+
+            for (String contact : entry.getValue()) {
+                String cleanContact = normalize(contact);
+
+                // NEW: skips invalid or self-contact entries while restoring
+                if (cleanContact != null && !owner.equals(cleanContact)) {
+                	groups.get(owner).add(cleanContact);
+                }
+            }
+        }
+    }
+    
+    
+    public synchronized Map<String, List<String>> exportGroups() {
+        Map<String, List<String>> copy = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Set<String>> entry : groups.entrySet()) {
+            copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+
+        return copy;
+    }
 }

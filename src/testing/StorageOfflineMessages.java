@@ -13,6 +13,7 @@ public class StorageOfflineMessages {
     @Test
     public void StoreOfflineMessageTest() {
         StorageManager sm = new StorageManager(
+        		"testGroups.txt",
                 "testITUsers.txt",
                 "testusers.txt",
                 "testcontacts.txt",
