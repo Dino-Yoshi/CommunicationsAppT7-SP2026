@@ -4,3 +4,5 @@ root: explode yourself
 DinoYoshi: wtf
 root: grr
 root: zoinks!
+root: konnichiwa
+root: konbanwa
