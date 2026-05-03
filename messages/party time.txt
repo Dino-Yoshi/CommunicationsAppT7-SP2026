@@ -5,3 +5,9 @@ DinoYoshi: THE DEATH OF YOUR FRIENDS WILL MAKE YOU DESPAIR
 Victor: hey man; chill out
 admin: why was i added to this. im reporting you all to HR
 root: bold words for someone in sudo rm -rf range
+DinoYoshi: yo root you there
+root: yeah whatchu need
+DinoYoshi: nothing just testing if you can see these messages. not doing anything suspicious so dont look into it thanks.
+root: hmm
+DinoYoshi: shh
+root: im taking al ook
