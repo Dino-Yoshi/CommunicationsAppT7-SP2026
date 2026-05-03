@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 // CLASS DESCRIPTION:
 // handles user persistence, chat history persistence, contact persistence, and offline message storage

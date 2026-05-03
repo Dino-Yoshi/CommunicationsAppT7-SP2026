@@ -12,3 +12,4 @@ xerp,derp
 Team 7,iamnotarealuserdonotactuallyloginasme
 you and me,iamnotarealuserdonotactuallyloginasme
 party time,iamnotarealuserdonotactuallyloginasme
+testGroup,iamnotarealuserdonotactuallyloginasme

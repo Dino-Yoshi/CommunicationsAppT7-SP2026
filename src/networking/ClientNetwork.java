@@ -1,7 +1,6 @@
 package networking;
 import client.*;
 import networking.Request.REQUESTTYPE;
-import server.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,8 +16,6 @@ public class ClientNetwork {
 	
 	private ObjectOutputStream objectOutputStream;
 	private ObjectInputStream objectInputStream;
-
-	private User user; 
 	
 	// constructor
 	public ClientNetwork(){

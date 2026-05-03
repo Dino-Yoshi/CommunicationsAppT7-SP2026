@@ -5,7 +5,6 @@ import javax.swing.*;
 import networking.Request;
 
 import java.awt.*;
-import java.util.*;
 
 public class GroupCreationView extends JPanel{
 	private GUI mainGUI;
@@ -160,7 +159,7 @@ public class GroupCreationView extends JPanel{
 		// Darien Test (Searching)
     	String msg = groupName + "," + membersList;
 		Request req = new Request(msg, "USER", "SERVER", 6, mainGUI.getCurrentUser().getUID(), -1);
-		Request res = mainGUI.getNetworkClient().sendRequest(req);
+		mainGUI.getNetworkClient().sendRequest(req);
 		
 		
 		

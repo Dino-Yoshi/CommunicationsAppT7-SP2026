@@ -1,8 +1,8 @@
-root:DinoYoshi,Clarize,Victor,Team 7,you and me,party time
+root:DinoYoshi,Clarize,Victor,Team 7,you and me,party time,testGroup
 DinoYoshi:root,you and me,party time
 Edward:Clarize
 Clarize:root,DinoYoshi,Team 7,party time
 Victor:Clarize,Team 7,party time
-admin:party time
-otheradmin:party time
+admin:party time,testGroup
+otheradmin:party time,testGroup
 Darien:party time

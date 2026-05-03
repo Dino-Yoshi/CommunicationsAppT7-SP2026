@@ -855,3 +855,8 @@ Sat May 02 18:37:12 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | cont
 Sat May 02 18:37:31 PDT 2026 | SEARCH | sender=15 | recipient=SERVER | content=d
 Sat May 02 18:39:29 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
 Sat May 02 18:39:35 PDT 2026 | LOGOUT | sender=DinoYoshi | recipient=SERVER | content=logout successful
+Sun May 03 11:50:28 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 11:50:44 PDT 2026 | SEARCH | sender=15 | recipient=SERVER | content=i
+Sun May 03 11:50:47 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=testGroup | content=created group
+Sun May 03 11:50:58 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=hi
+Sun May 03 11:51:00 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
