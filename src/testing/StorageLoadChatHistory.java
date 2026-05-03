@@ -16,6 +16,7 @@ public class StorageLoadChatHistory {
     @Test
     public void LoadChatHistoryTest() {
         StorageManager sm = new StorageManager(
+        		"testGroups.txt",
                 "testITUsers.txt",
                 "testusers.txt",
                 "testcontacts.txt",

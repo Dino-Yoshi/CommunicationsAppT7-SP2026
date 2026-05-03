@@ -16,6 +16,7 @@ public class StorageSaveMessage {
     @Test
     public void SaveMessageTest() {
         StorageManager sm = new StorageManager(
+        		"testGroups.txt",
                 "testITUsers.txt",
                 "testusers.txt",
                 "testcontacts.txt",

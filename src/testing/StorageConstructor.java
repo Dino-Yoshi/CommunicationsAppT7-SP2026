@@ -12,6 +12,7 @@ public class StorageConstructor {
     @Test
     public void StorageConstructorTest() {
         StorageManager sm = new StorageManager(
+        		"testGroups.txt",
                 "testITUsers.txt",
                 "testusers.txt",
                 "testcontacts.txt",
