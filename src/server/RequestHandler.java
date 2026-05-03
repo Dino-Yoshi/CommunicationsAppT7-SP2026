@@ -34,11 +34,12 @@ public class RequestHandler {
         this.groupManager = new GroupManager();	// creates the group manager
         this.contactManager = new ContactManager(); 			// creates the contact manager
         this.loggingManager = new LoggingManager("server.log"); // creates the logging manager using a simple log file
-        this.storageManager = new StorageManager("ITUsers.txt", "users.txt", "contacts.txt", "messages"); 	// creates the storage manager using a user file and message folder
+        this.storageManager = new StorageManager("groups.txt", "ITUsers.txt", "users.txt", "contacts.txt", "messages"); 	// creates the storage manager using a user file and message folder
         this.connectionManager = new ConnectionManager(); 						// creates the connection manager
         this.auth.loadUsers(this.storageManager.loadUsers()); 					// loads saved users into the authentication manager
         this.auth.loadITUsers(this.storageManager.loadITUsers());				// loads saved ITUsers into the authentication manager
         this.contactManager.importContacts(this.storageManager.loadContacts());	// ***** NEW: restores contacts after boot
+        this.groupManager.loadGroups(this.storageManager.loadGroups());
 
     }
 
@@ -205,6 +206,15 @@ public class RequestHandler {
         String sender = auth.getUsernameById(request.getSenderID());		// resolves the sender username
         
         String[] incomingData = parseTwoValues(request.getData()); // separate the content from the target
+        
+        if(groupManager.groupExists(incomingData[1])) { // its a group chat. do completely different logic.
+        	storageManager.saveGroupMessage(request, auth);
+        	loggingManager.addStructuredLog(LogType.PRIVATE_MESSAGE, sender, "", incomingData[0]);	// logs the private message
+            loggingManager.saveLogs(); // saves the log
+            return createResponse("SUCCESS: group message processed", Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(incomingData[1]), request.getSenderID());	// returns message success response
+        }
+        
+        // otherwise you continue as a private chat between two users.
         int recip = auth.getIdByUsername(incomingData[1]); // resolve the name to an id, then back to a username.
         
         String recipient = auth.getUsernameById(recip); // resolves the recipient username
@@ -314,9 +324,16 @@ public class RequestHandler {
             return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	// returns login required response
         }	// end logged in check
         
+        //
+        if(groupManager.groupExists(request.getData())) { // load group chat history
+        	List<String> history = storageManager.loadGroupChatHistory(request.getData());
+        	return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
+        }
+        
         if(auth.getIdByUsername(request.getData()) == null){
         	return createResponse("ERROR: chat must be selected to refresh", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());
         }
+        
         
         List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	// loads chat history from storage
         return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
@@ -354,23 +371,35 @@ public class RequestHandler {
         for (String member : members) {	// starts loop through each requested member
             if (!auth.userExists(member)) {	// checks if the requested member is not registered
                 return createResponse("ERROR: group member does not exist " + member, Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns missing member response
-            }	// end member exists check
+            }else {
+            	contactManager.addContact(member, groupName);
+            }
         }	// end member validation loop
         
-        boolean created = groupManager.createGroup(groupName, members);	// attempts to create the group
+        boolean created = false;
+        if(members.size() >= 2) {
+        	created = groupManager.createGroup(groupName, members);	// attempts to create the group
+        }
         
         if (created) { // checks if the group was created
         	if(!auth.registerGroup(groupName) && members.size() != 2) return createResponse("ERROR: group name already exists", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response; // treat this as a "user" but no available username/password. This gives it an ID we can use to commune.
         	
         	if(!auth.userExists(groupName)) {storageManager.saveUser(groupName, "iamnotarealuserdonotactuallyloginasme");} // if 
         	
-        	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
+        	storageManager.saveGroups(groupManager.exportGroups());
+        	//contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
             storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the updated contact map
         	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // s the log
             return createResponse("SUCCESS: group created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());	// returns success response
-        }	// end group creation success check
-        return createResponse("ERROR: group was not created", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
+        }else{
+        	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
+            storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the updated contact map
+        	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created private chat");	// logs successful group creation
+            loggingManager.saveLogs(); // s the log
+            return createResponse("SUCCESS: private chat created " + groupName, Request.REQUESTTYPE.SUCCESS, auth.getIdByUsername(groupName), request.getSenderID());
+        }
+        
     }
 
     // GETTERS
