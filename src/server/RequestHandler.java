@@ -123,18 +123,23 @@ public class RequestHandler {
         String[] credentials = parseTwoValues(request.getData());	// parses username and password from request data
         String username = credentials[0];	// stores the requested username
         String password = credentials[1]; 	// stores the requested password
-
-        
-       
         
         //no passing of any data but simply views the recipientType field 
         String role = request.getRecipientType();
         if(role == null) role = "USER";
+        
         boolean registered = role.equals("IT") ? auth.registerITUser(username, password) : auth.registerUser(username, password);
-       
      // attempts to register the user in memory based on the requested role
         if (registered) {	// checks if registration succeeded
-            storageManager.saveUser(username.trim(), password);	// saves the new user to the user file
+        	
+        	//double check if an it being made
+        	if(role.equals("IT")) {
+        		//will call the saveITUSer method if so
+        		storageManager.saveITUser(username.trim(), password);
+        	}else {
+               storageManager.saveUser(username.trim(), password);	// saves the new user to the user file
+
+        	}
             loggingManager.addStructuredLog(LogType.REGISTRATION_SUCCESS, String.valueOf(request.getSenderID()), username, "registered user");	// logs successful registration
             loggingManager.saveLogs();	// saves the log
             Integer newUserId = auth.getIdByUsername(username);	// gets the new user's id
@@ -278,7 +283,10 @@ public class RequestHandler {
     // returns user's contacts
     public synchronized Request doViewContacts(Request request) {
         String username = auth.getUsernameById(request.getSenderID());	// resolves the sender username
-        
+        //should allow IT to specifically view only the selected user chats, prevent all chats from being displayed essentially.
+        if (isITRequest(request) && request.getData() != null && !request.getData().isBlank()) {
+            username = request.getData().trim();
+        }
         if (username == null) {	// checks if the sender id is unknown
             return createResponse("ERROR: unknown user", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns unknown user response
         }	// end unknown user check
@@ -326,25 +334,47 @@ public class RequestHandler {
         return createResponse("ERROR: contact was not removed", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns failure response
     }
 
-    // loads direct chat history between sender and recipient
+    
+ // loads direct chat history between sender and recipient
     public synchronized Request doChatLog(Request request) {
-        if (!senderIsLoggedIn(request)) {	// checks if the sender is not logged in
-            return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	// returns login required response
-        }	// end logged in check
+        if (!senderIsLoggedIn(request)) {	
+            return createResponse("ERROR: sender must be logged in to load chat history", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());	
+        }	
         
-        //
-        if(groupManager.groupExists(request.getData())) { // load group chat history
+        //victor
+        // Check if an IT Admin is asking to view a chat between two specific users 
+        if (isITRequest(request) && request.getData().contains(",")) {
+            String[] users = parseTwoValues(request.getData());
+            String userA = users[0];
+            String userB = users[1];
+            
+            if (groupManager.groupExists(userB)) {
+                List<String> history = storageManager.loadGroupChatHistory(userB);
+                return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());
+            }
+            
+            Integer idA = auth.getIdByUsername(userA);
+            Integer idB = auth.getIdByUsername(userB);
+            
+            if (idA != null && idB != null) {
+                List<String> history = storageManager.loadChatHistory(idA, idB, auth);
+                return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());
+            }
+            return createResponse("ERROR: chat history not found", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());
+        }
+
+        // --- Normal User Logic Below ---
+        if(groupManager.groupExists(request.getData())) { 
         	List<String> history = storageManager.loadGroupChatHistory(request.getData());
-        	return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
+        	return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	
         }
         
         if(auth.getIdByUsername(request.getData()) == null){
         	return createResponse("ERROR: chat must be selected to refresh", Request.REQUESTTYPE.NULL, request.getRecipientID(), request.getSenderID());
         }
         
-        
-        List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	// loads chat history from storage
-        return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	// returns chat history response
+        List<String> history = storageManager.loadChatHistory(request.getSenderID(), auth.getIdByUsername(request.getData()), auth);	
+        return createResponse(String.join("\n", history), Request.REQUESTTYPE.SUCCESS, request.getRecipientID(), request.getSenderID());	
     }
 
     // reads saved and buffered logs for it users

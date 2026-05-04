@@ -59,6 +59,16 @@ public class StorageManager {
             System.out.println("Failed to save user: " + e.getMessage());	// prints the error to the console
         }	// end try-catch block
     }
+    
+ // appends a username,password pair to the IT user file
+    public synchronized void saveITUser(String username, String password) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ITUserFilePath, true))) {	// opens the IT user file in append mode
+            writer.write(username + "," + password);	// writes one username,password pair
+            writer.newLine();		// moves to the next line for the next saved user
+        } catch (IOException e) {	// catches file writing errors
+            System.out.println("Failed to save IT user: " + e.getMessage());	// prints the error to the console
+        }	// end try-catch block
+    }
 
     // loads all saved username,password pairs from the user file
     public synchronized Map<String, String> loadUsers() {
