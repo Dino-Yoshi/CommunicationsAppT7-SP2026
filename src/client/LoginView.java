@@ -95,7 +95,9 @@ public class LoginView extends JPanel{
 						ITUser adminUser = new ITUser(username, password);
 						adminUser.setUID(res.getRecipientID());
 						mainGUI.setCurrentUser(adminUser);
+
 						mainGUI.getChatOverlayView().updateLoggedInUserDisplay(); // if IT logs in, it will updated the person currently logged in 
+
 						mainGUI.getChatOverlayView().setITButton(); 
 						mainGUI.switchView(VIEWSTATE.ITPANEL); 
 					}
