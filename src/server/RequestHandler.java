@@ -123,18 +123,16 @@ public class RequestHandler {
         String[] credentials = parseTwoValues(request.getData());	// parses username and password from request data
         String username = credentials[0];	// stores the requested username
         String password = credentials[1]; 	// stores the requested password
-<<<<<<< HEAD
-        boolean registered = auth.registerUser(username, password); // attempts to register the user in memory
+
         
-=======
+       
         
         //no passing of any data but simply views the recipientType field 
         String role = request.getRecipientType();
         if(role == null) role = "USER";
-        
         boolean registered = role.equals("IT") ? auth.registerITUser(username, password) : auth.registerUser(username, password);
+       
      // attempts to register the user in memory based on the requested role
->>>>>>> 257d11f (code should be reverted back to relying on how request work. We don't pass a third field instead Just look at the recipientType to validate who is for the user to to made as.)
         if (registered) {	// checks if registration succeeded
             storageManager.saveUser(username.trim(), password);	// saves the new user to the user file
             loggingManager.addStructuredLog(LogType.REGISTRATION_SUCCESS, String.valueOf(request.getSenderID()), username, "registered user");	// logs successful registration
