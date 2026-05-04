@@ -182,35 +182,44 @@ public class ITControlPanelView extends JPanel{
             }
         });
         
-        //
+ 
+     // Handles clicking on a specific chat to view the real chat history
         userChatsList.addListSelectionListener(e -> {
-        	
-    		Request req = new Request("", "USER", "SERVER", 3, mainGUI.getCurrentUser().getUID(), -1);
-    		mainGUI.getNetworkClient().sendRequest(req);
-        	
             if (!e.getValueIsAdjusting() && userChatsList.getSelectedValue() != null) {
                 String selectedUser = searchResultsList.getSelectedValue();
                 String targetContact = userChatsList.getSelectedValue();
                 
                 logUI.setText("--- CHAT LOGS: " + selectedUser + " in " + targetContact + " ---\n\n");
-                logUI.append("[" + selectedUser + "] Hello everyone!\n");
                 
+                // Sends a request for chathistory with request with "UserA,UserB"
+                String requestData = selectedUser + "," + targetContact;
+                Request req = new Request(requestData, "IT", "SERVER", 4, mainGUI.getCurrentUser().getUID(), -1);
+                Request response = mainGUI.getNetworkClient().sendRequest(req);
+                
+                // Print the real history to the screen
+                if (response != null && response.getType() == Request.REQUESTTYPE.SUCCESS) {
+                	logUI.append(response.getData());
+                	logUI.setCaretPosition(0); // scrolls to the top
+                } else {
+                	logUI.append("No chat history found or failed to load.");
+                }
             }
-        });	
-    }
+        });
+  }
 	
 	public void registerNewUser() {
 		String newUserName = newUserUI.getText();
 		String newPassword = new String(newPassUI.getPassword());
 		boolean isIT = isITAdminCheckBox.isSelected();
 		
-		if(newUserName.isEmpty() || newPassword.isEmpty()) return;
-		
-        String msg = newUserName + "," + newPassword;
-        String role = isIT ? "IT" : "USER";
-        Request req = new Request(msg, "IT", role, 1, mainGUI.getCurrentUser().getUID(), -1);
+		//check if an IT is being made
+		String role = isIT ? "IT" : "USER";
+        String msg = newUserName + "," + newPassword + "," + role;
+        
+        Request req = new Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
 		Request response = mainGUI.getNetworkClient().sendRequest(req);
         
+		//check for response back from server
 		if (response != null && response.getType() == Request.REQUESTTYPE.SUCCESS) {
 			JOptionPane.showMessageDialog(this, "User '" + newUserName + "' registered successfully as " + role + ".");
 	        newUserUI.setText(""); 
@@ -219,6 +228,25 @@ public class ITControlPanelView extends JPanel{
 		} else {
 			JOptionPane.showMessageDialog(this, "Registration failed.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		
+		/*
+		 * if(newUserName.isEmpty() || newPassword.isEmpty()) return;
+		 * 
+		 * //display that new registration was successful
+		 * JOptionPane.showMessageDialog(this, "User '" + newUserName +
+		 * "' registered successfully."); newUserUI.setText(""); newPassUI.setText("");
+		 * 
+		 * String msg = newUserName + "," + newPassword; //new Request req = new
+		 * Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
+		 * //Request req = new Request(msg, "USER", "SERVER", 1,
+		 * mainGUI.getCurrentUser().getUID(), -1);
+		 * mainGUI.getNetworkClient().sendRequest(req);
+		 */
+        
+		/* layout of how it will generally go
+		 * String regData = newUsername + "," + newPassword; Request regReq = new
+		 * Request(regData, "IT_USER", "SERVER", 1, 0, 0);
+		 */
 	}
 	
 }
