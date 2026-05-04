@@ -18,13 +18,27 @@ public class ChatOverlayView extends JPanel{
 	private JTextArea chatHistory;
 	private JButton ITPanelButton;
 	private JTextField messageInputUI;
-	
+	private JLabel loggedInUserLabel;
 //constructor
 	public ChatOverlayView(GUI mainGUI) {
 		this.mainGUI = mainGUI;
 		setLayout(new BorderLayout());
 		
-
+		//who is logged in layout
+		JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		loggedInUserLabel = new JLabel(" Not Logged In ");
+		loggedInUserLabel.setFont(new Font("Arial", Font.BOLD, 12));
+		loggedInUserLabel.setForeground(Color.DARK_GRAY);
+		
+		// Give it that "little box" look
+		loggedInUserLabel.setOpaque(true);
+		loggedInUserLabel.setBackground(new Color(240, 240, 240));
+		loggedInUserLabel.setBorder(BorderFactory.createCompoundBorder(
+		    BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1), // Outer border
+		    BorderFactory.createEmptyBorder(4, 8, 4, 8)          // Inner padding
+		));
+		headerPanel.add(loggedInUserLabel);
+		add(headerPanel, BorderLayout.NORTH);
 		
 		//set up layout for our contacts list
 		JPanel contactsPanel = new JPanel(new BorderLayout());
@@ -224,5 +238,22 @@ public class ChatOverlayView extends JPanel{
 		}else {
 			JOptionPane.showMessageDialog(this, "An unknown exception has occurred when attempting to log out... Please contact your admin.", "Logout Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	//Updates the top-left box with the current user's username
+	public void updateLoggedInUserDisplay() {
+	    if (mainGUI.getCurrentUser() != null) {
+	        String username = mainGUI.getCurrentUser().getUsername();
+	        
+	        // blue text if they are an IT Admin, to make it somewhat distinct
+	        //check if user is of ITUser, if so then set that blue text for logged IT
+	        if (mainGUI.getCurrentUser() instanceof ITUser) {
+	            loggedInUserLabel.setText(" Logged in: " + username + " [IT] ");
+	            loggedInUserLabel.setForeground(new Color(0, 102, 204)); 
+	        } else {//regular users
+	            loggedInUserLabel.setText(" Logged in: " + username + " ");
+	            loggedInUserLabel.setForeground(Color.DARK_GRAY); 
+	        }
+	    }
 	}
 }

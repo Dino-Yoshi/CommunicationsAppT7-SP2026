@@ -204,14 +204,13 @@ public class ITControlPanelView extends JPanel{
 		String newPassword = new String(newPassUI.getPassword());
 		boolean isIT = isITAdminCheckBox.isSelected();
 		
-		//check if an IT is being made
-		String role = isIT ? "IT" : "USER";
-        String msg = newUserName + "," + newPassword + "," + role;
-        
-        Request req = new Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
+		if(newUserName.isEmpty() || newPassword.isEmpty()) return;
+		
+        String msg = newUserName + "," + newPassword;
+        String role = isIT ? "IT" : "USER";
+        Request req = new Request(msg, "IT", role, 1, mainGUI.getCurrentUser().getUID(), -1);
 		Request response = mainGUI.getNetworkClient().sendRequest(req);
         
-		//check for response back from server
 		if (response != null && response.getType() == Request.REQUESTTYPE.SUCCESS) {
 			JOptionPane.showMessageDialog(this, "User '" + newUserName + "' registered successfully as " + role + ".");
 	        newUserUI.setText(""); 
@@ -220,25 +219,6 @@ public class ITControlPanelView extends JPanel{
 		} else {
 			JOptionPane.showMessageDialog(this, "Registration failed.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		/*
-		 * if(newUserName.isEmpty() || newPassword.isEmpty()) return;
-		 * 
-		 * //display that new registration was successful
-		 * JOptionPane.showMessageDialog(this, "User '" + newUserName +
-		 * "' registered successfully."); newUserUI.setText(""); newPassUI.setText("");
-		 * 
-		 * String msg = newUserName + "," + newPassword; //new Request req = new
-		 * Request(msg, "IT", "SERVER", 1, mainGUI.getCurrentUser().getUID(), -1);
-		 * //Request req = new Request(msg, "USER", "SERVER", 1,
-		 * mainGUI.getCurrentUser().getUID(), -1);
-		 * mainGUI.getNetworkClient().sendRequest(req);
-		 */
-        
-		/* layout of how it will generally go
-		 * String regData = newUsername + "," + newPassword; Request regReq = new
-		 * Request(regData, "IT_USER", "SERVER", 1, 0, 0);
-		 */
 	}
 	
 }
