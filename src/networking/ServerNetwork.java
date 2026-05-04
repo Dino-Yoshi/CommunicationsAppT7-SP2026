@@ -70,8 +70,7 @@ public class ServerNetwork {
 		
 		// attribs
 		private final Socket clientSocket;
-		private String username;
-		private boolean authenticated;
+
 		
 		private ObjectOutputStream objectOutputStream;
 		private ObjectInputStream objectInputStream;
@@ -81,8 +80,6 @@ public class ServerNetwork {
 		public ClientHandler(Socket socket)
 		{
 			this.clientSocket = socket;
-			this.username = null;
-			this.authenticated = false;
 			
 			
 			// load the users...? feels like the requestHandler should be a singleton if its going to need to load users for ALL active users...
@@ -137,8 +134,7 @@ public class ServerNetwork {
 				    objectOutputStream.flush();
 		        	
 		        }while(OutboundMsg.getType() == Request.REQUESTTYPE.NULL);
-		        
-		        setAuthenticated(true);
+		      
 			        
 		        // now read for requests sent by the client.
 		        do {
@@ -182,11 +178,6 @@ public class ServerNetwork {
 		public void sendResponse(Request req) throws IOException{
 			objectOutputStream.writeObject(req);
 			objectOutputStream.flush();
-		}
-		
-		// setters
-		public void setAuthenticated(boolean authenticated) {
-			this.authenticated = authenticated;
 		}
 		
 	}

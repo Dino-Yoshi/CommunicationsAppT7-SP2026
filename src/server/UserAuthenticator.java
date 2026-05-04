@@ -85,7 +85,7 @@ public class UserAuthenticator {
         return true;	// returns success
     }
     
-    //register a new IT user-Victor
+  //register a new IT user-Victor
     public synchronized boolean registerITUser(String username, String password) {
         String cleanUsername = normalize(username);	// cleans username
         String cleanPassword = password;			// keeps password as is
