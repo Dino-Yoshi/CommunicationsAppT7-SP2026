@@ -96,8 +96,19 @@ import org.junit.platform.suite.api.SelectClasses;
     StorageOfflineMessages.class,
     StorageSaveMessage.class,
     StorageLoadChatHistory.class,
-
     
+    ChatOverlayViewAddNewGroup.class,
+    ChatOverlayViewConstructorInitilzies.class,
+    ChatOverlayViewSetITButton.class,
+    GroupCreationViewClearFields.class,
+    GroupCreationViewConstructorInstantializes.class,
+    GUIGetNetworkClient.class,
+    GUIPanelGetters.class,
+    GUISetCurrentUser.class,
+    GUISwitchView.class,
+    ITControlPanelViewConstructorInstantiatizes.class,
+    LoginViewClearFields.class,
+   
 	})
 
 
