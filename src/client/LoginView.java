@@ -90,13 +90,13 @@ public class LoginView extends JPanel{
 					mainGUI.getChatOverlayView().clearChatState();
 						 
 					//check if we tagged the user as IT
-					if ("IT".equals(res.getRecipientType()) || (res.getData() != null && res.getData().contains("logged in as an IT"))) {
-					    System.out.println("Successful IT login by: " + username);
-					    ITUser adminUser = new ITUser(username, password);
-					    adminUser.setUID(res.getRecipientID());
-					    mainGUI.setCurrentUser(adminUser);
-					    mainGUI.getChatOverlayView().setITButton(); 
-					    mainGUI.switchView(VIEWSTATE.ITPANEL); 
+					if ("IT".equals(res.getRecipientType())) {
+						System.out.println("Successful IT login by: " + username);
+						ITUser adminUser = new ITUser(username, password);
+						adminUser.setUID(res.getRecipientID());
+						mainGUI.setCurrentUser(adminUser);
+						mainGUI.getChatOverlayView().setITButton(); 
+						mainGUI.switchView(VIEWSTATE.ITPANEL); 
 					}
 				else {//normal user login
 					System.out.println("Successful login by: " + username);

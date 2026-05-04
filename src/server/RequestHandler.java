@@ -120,14 +120,16 @@ public class RequestHandler {
             return createResponse("ERROR: only IT users can register new users", Request.REQUESTTYPE.NULL, -1, request.getSenderID()); // returns permission error
         } // end it permission check
         
-        String[] credentials = request.getData().split(",",3);	// parses username and password from request data
-        String username = credentials[0].trim();	// stores the requested username
-        String password = credentials[1].trim(); 	// stores the requested password
-        String role = credentials.length > 2 ? credentials[2].trim() : "USER"; // defaults to standard USER if no role is sent
+        String[] credentials = parseTwoValues(request.getData());	// parses username and password from request data
+        String username = credentials[0];	// stores the requested username
+        String password = credentials[1]; 	// stores the requested password
         
-     // attempts to register the user in memory based on the requested role
+        //no passing of any data but simply views the recipientType field 
+        String role = request.getRecipientType();
+        if(role == null) role = "USER";
+        
         boolean registered = role.equals("IT") ? auth.registerITUser(username, password) : auth.registerUser(username, password);
-        
+     // attempts to register the user in memory based on the requested role
         if (registered) {	// checks if registration succeeded
         	
         	//double check if an it being made
@@ -165,7 +167,7 @@ public class RequestHandler {
             loggingManager.saveLogs();	// saves the log
             
             // String d, String sType, String rType, int t, int sID, int rID
-            Request outbound = new Request("SUCCESS: logged in as an IT, " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), "SERVER", "USER", 11, 0, userId);
+            Request outbound = new Request("SUCCESS: logged in as an IT, " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), "SERVER", "IT", 11, 0, userId);
             return outbound;
             //return createResponse("SUCCESS: logged in as " + username.trim() + " with id " + userId + " offline messages " + offlineMessages.size(), Request.REQUESTTYPE.SUCCESS, -1, userId);	// returns success response
         }else if(auth.authenticate(username, password)) {
