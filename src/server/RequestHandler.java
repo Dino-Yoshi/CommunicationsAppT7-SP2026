@@ -285,7 +285,7 @@ public class RequestHandler {
         String username = auth.getUsernameById(request.getSenderID());	// resolves the sender username
         //should allow IT to specifically view only the selected user chats, prevent all chats from being displayed essentially.
         if (isITRequest(request) && request.getData() != null && !request.getData().isBlank()) {
-            username = request.getData().trim();
+            username = auth.getUsernameById(request.getSenderID());
         }
         if (username == null) {	// checks if the sender id is unknown
             return createResponse("ERROR: unknown user", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns unknown user response
@@ -393,6 +393,7 @@ public class RequestHandler {
 
     // creates a new group
     public synchronized Request doCreateGroup(Request request) {
+    
         if (!senderIsLoggedIn(request)) {	// checks if the sender is not logged in
             return createResponse("ERROR: sender must be logged in to create groups", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns login required response
         } // end logged in check
@@ -425,7 +426,7 @@ public class RequestHandler {
         	if(!auth.userExists(groupName)) {storageManager.saveUser(groupName, "iamnotarealuserdonotactuallyloginasme");} // if 
         	
         	storageManager.saveGroups(groupManager.exportGroups());
-        	//contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
+        	contactManager.addContact(creator, groupName); // add the contact for the creator TODO, the other members need to also recieve the group chat.
             storageManager.saveContacts(contactManager.exportContacts());	// ***** NEW: saves the updated contact map
         	loggingManager.addStructuredLog(LogType.GROUP_MESSAGE, creator, groupName, "created group");	// logs successful group creation
             loggingManager.saveLogs(); // s the log
