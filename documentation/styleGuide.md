@@ -10,9 +10,8 @@ This guide covers mostly coding style for submitting pull requests.
   * [Identifiers](#identifiers)
   * [Expressions](#expressions)
   * [If / for / while etc](#if-for-while-etc)
-  * [Functions](#fonctions)
+  * [Functions](#functions)
   * [Comments](#comments)
-  * [File headers](#file-headers)
   * [Header files](#header-files)
   * [Whitespace](#whitespace)
 
