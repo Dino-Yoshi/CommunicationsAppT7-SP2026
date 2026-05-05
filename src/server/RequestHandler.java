@@ -285,7 +285,7 @@ public class RequestHandler {
         String username = auth.getUsernameById(request.getSenderID());	// resolves the sender username
         //should allow IT to specifically view only the selected user chats, prevent all chats from being displayed essentially.
         if (isITRequest(request) && request.getData() != null && !request.getData().isBlank()) {
-            username = request.getData().trim();
+            username = auth.getUsernameById(request.getSenderID());
         }
         if (username == null) {	// checks if the sender id is unknown
             return createResponse("ERROR: unknown user", Request.REQUESTTYPE.NULL, -1, request.getSenderID());	// returns unknown user response
