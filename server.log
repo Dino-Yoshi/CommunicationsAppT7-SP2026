@@ -860,3 +860,21 @@ Sun May 03 11:50:44 PDT 2026 | SEARCH | sender=15 | recipient=SERVER | content=i
 Sun May 03 11:50:47 PDT 2026 | GROUP_MESSAGE | sender=root | recipient=testGroup | content=created group
 Sun May 03 11:50:58 PDT 2026 | PRIVATE_MESSAGE | sender=root | recipient= | content=hi
 Sun May 03 11:51:00 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sun May 03 18:52:16 PDT 2026 | LOGIN_FAILED | sender=sudoers | recipient=SERVER | content=login failed
+Sun May 03 18:52:20 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 18:52:24 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=su
+Sun May 03 18:52:29 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=i
+Sun May 03 18:52:33 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sun May 03 18:52:56 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 20:19:28 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 20:19:31 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=i
+Sun May 03 20:26:47 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 20:26:50 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=i
+Sun May 03 20:27:07 PDT 2026 | LOGOUT | sender=root | recipient=SERVER | content=logout successful
+Sun May 03 20:27:15 PDT 2026 | LOGIN_SUCCESS | sender=DinoYoshi | recipient=SERVER | content=login successful
+Sun May 03 20:29:17 PDT 2026 | LOGOUT | sender=DinoYoshi | recipient=SERVER | content=logout successful
+Sun May 03 20:29:22 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 20:33:15 PDT 2026 | LOGIN_SUCCESS | sender=root | recipient=SERVER | content=login successful
+Sun May 03 20:33:18 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=team
+Sun May 03 20:33:21 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=e
+Sun May 03 20:34:13 PDT 2026 | SEARCH | sender=16 | recipient=SERVER | content=e
