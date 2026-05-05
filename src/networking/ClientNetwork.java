@@ -19,7 +19,7 @@ public class ClientNetwork {
 	
 	// constructor
 	public ClientNetwork(){
-		serverIP = "192.168.1.70"; // need to change when actually testing
+		serverIP = "134.154.56.232"; // need to change when actually testing
 		serverPort = 7777;
 		status = CLIENTSTATUS.DISCONNECTED; // by default they are not connect until a login attempt is made. 
 	}
